@@ -577,9 +577,10 @@ form input[type="submit"]:hover, .quick-comment button:hover {
 form input[type="button"] {
   color: #dddddd;
   background-color: #555555 !important;
-  padding: 10px 15px;
+  /* padding: 10px 15px; */
   border: 0;
   cursor: pointer;
+  line-height: 0.7 !important;
 }
 
 form input[type="button"]:hover {
@@ -702,8 +703,8 @@ input[type="radio"]:before {
   border-radius: 50%;
   display: inline-block;
   vertical-align: middle;
-  width: 20px;
-  height: 20px;
+  width: 23.5px;
+  height: 23.5px;
   position: relative;
   top: -7px;
   left: -6px;
@@ -720,8 +721,8 @@ input[type="radio"]:checked:after {
   border-radius: 50%;
   display: inline-block;
   vertical-align: middle;
-  width: 6px;
-  height: 6px;
+  width: 7.5px;
+  height: 7.5px;
   position: absolute;
   top: 0;
   left: 0;
