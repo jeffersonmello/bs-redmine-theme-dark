@@ -564,6 +564,8 @@ form input[type="submit"], .quick-comment button {
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   transition: all 0.15s ease-in-out;
+  height: 2.5rem;
+  margin: 1px;
 }
 
 form input[type="submit"]:hover, .quick-comment button:hover {
@@ -667,7 +669,7 @@ input[type="checkbox"]:before {
   width: 20px;
   height: 20px;
   position: relative;
-  top: -7px;
+  /* top: -7px; */
   left: -6px;
 }
 
@@ -678,7 +680,7 @@ input[type="checkbox"]:hover:before {
 input[type="checkbox"]:checked:after {
   content: "✔";
   position: absolute;
-  top: -6px;
+  top: -1px;
   left: 0;
   font-size: 14px;
   color: #eee;
@@ -826,7 +828,7 @@ div.modal {
 }
 
 table.progress {
-  width: 100%;
+  width: 90%;
 }
 
 table.progress td.todo {
