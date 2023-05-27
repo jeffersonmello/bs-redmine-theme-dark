@@ -1,8 +1,27 @@
 /*================================
 Add your custom style here
 ==================================*/
+@import url("https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css");
+
+
 #content h1, h2, h3, h4, h5, h6 {color: #FFF;}
 
 #project-jump .drdn-items>* {
     color: #b4b4b4 !important;
+}
+
+.wiki-preview {
+    background: #27292e !important;
+}
+
+div.wiki pre {
+    background-color: #27292e !important;
+}
+
+.syntaxhl {
+    background: #27292e !important;
+}
+
+.check_box_group {
+    background: #27292e !important;
 }
