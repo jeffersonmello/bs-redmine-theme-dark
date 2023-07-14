@@ -13,6 +13,7 @@ Add your custom style here
 
 div.wiki pre {
     background-color: #27292e !important;
+    color: #FFF !important;
 }
 
 .syntaxhl {
@@ -21,4 +22,24 @@ div.wiki pre {
 
 .check_box_group {
     background: #27292e !important;
+}
+
+.syntaxhl .s1 {
+    background-color: #fac019 !important;
+}
+
+.syntaxhl .s2 {
+    background-color: #b18300 !important;
+}
+
+.syntaxhl .dl {
+    background-color: #b18300 !important;
+}
+
+.syntaxhl .o {
+    color: #939393 !important;
+}
+
+.syntaxhl .mi {
+    color: #e688ec !important;
 }
