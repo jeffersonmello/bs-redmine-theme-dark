@@ -43,3 +43,7 @@ div.wiki pre {
 .syntaxhl .mi {
     color: #e688ec !important;
 }
+
+.icon-clear-query {
+    width: auto !important;
+}
