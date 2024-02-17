@@ -47,3 +47,41 @@ div.wiki pre {
 .icon-clear-query {
     width: auto !important;
 }
+
+/* SCM */
+
+table.filecontent {
+    border: 1px solid #464242 !important;
+    background-color: #464242 !important;
+}
+
+table.filecontent th.line-num {
+    border: 1px solid #464242 !important;
+    color: #FFF !important;
+}
+
+table.filecontent th {
+    background-color: #464242 !important;
+}
+
+.diff_in {
+    background: #cfc !important;
+    color: #5e5555 !important;
+}
+
+.diff_out {
+    background: #fcc !important;
+    color: #5e5555 !important;
+}
+
+table.filecontent tr.spacing td {
+    background: #3a3d3f !important;
+}
+
+table.filecontent th.filename {
+    background-color: #3a3d3f !important;
+}
+
+table.filecontent th {
+    border: 1px solid #3a3d3f !important;
+}
