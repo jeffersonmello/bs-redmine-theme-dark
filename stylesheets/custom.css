@@ -1,9 +1,16 @@
 /*================================
 Add your custom style here
 ==================================*/
-#content h1, h2, h3, h4, h5, h6 {color: #FFF;}
+#content h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #fff;
+}
 
-#project-jump .drdn-items>* {
+#project-jump .drdn-items > * {
     color: #b4b4b4 !important;
 }
 
@@ -13,7 +20,7 @@ Add your custom style here
 
 div.wiki pre {
     background-color: #27292e !important;
-    color: #FFF !important;
+    color: #fff !important;
 }
 
 .syntaxhl {
@@ -22,6 +29,10 @@ div.wiki pre {
 
 .check_box_group {
     background: #27292e !important;
+}
+
+.syntaxhl .s {
+    background-color: #93814e !important;
 }
 
 .syntaxhl .s1 {
@@ -57,7 +68,7 @@ table.filecontent {
 
 table.filecontent th.line-num {
     border: 1px solid #464242 !important;
-    color: #FFF !important;
+    color: #fff !important;
 }
 
 table.filecontent th {
