@@ -15,3 +15,5 @@ applyTo: "**/*.md"
   sync when behavior changes.
 - Document sidebar changes across desktop, `nosidebar`, storage-failure, and
   native mobile-flyout states.
+- Document the customer autocomplete as an instance-specific enhancement tied
+  to `issue_custom_field_values_4`, not a generic Redmine feature.

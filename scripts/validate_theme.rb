@@ -13,6 +13,7 @@ REQUIRED_FILES = %w[
   stylesheets/custom.css
   javascripts/theme.js
   tests/theme_sidebar_test.js
+  tests/theme_customer_autocomplete_test.js
   webfonts/fa-solid-900.eot
   webfonts/fa-solid-900.svg
   webfonts/fa-solid-900.ttf
@@ -50,7 +51,8 @@ if modern_css.file?
     "modern design tokens" => "--theme-surface",
     "desktop sidebar collapse rule" => "body.theme-sidebar-collapsed #sidebar",
     "visible keyboard focus" => ":focus-visible",
-    "responsive sidebar boundary" => "max-width: 899px"
+    "responsive sidebar boundary" => "max-width: 899px",
+    "customer autocomplete presentation" => ".tm-clientes-autocomplete"
   }.each do |contract, snippet|
     errors << "modern.css is missing #{contract}: #{snippet}" unless contents.include?(snippet)
   end
@@ -64,7 +66,9 @@ if theme_js.file?
     "persistent preference" => "localStorage",
     "accessible expanded state" => "aria-expanded",
     "desktop viewport boundary" => "min-width: 900px",
-    "pages without a sidebar guard" => "nosidebar"
+    "pages without a sidebar guard" => "nosidebar",
+    "customer custom-field target" => "issue_custom_field_values_4",
+    "customer combobox semantics" => "aria-autocomplete"
   }.each do |contract, snippet|
     errors << "theme.js is missing #{contract}: #{snippet}" unless contents.include?(snippet)
   end

@@ -28,5 +28,5 @@ jobs:
       - name: Validate theme JavaScript syntax
         run: node --check javascripts/theme.js
 
-      - name: Test sidebar behavior
-        run: node --test tests/theme_sidebar_test.js
+      - name: Test theme behavior
+        run: node --test tests/*.js

@@ -20,7 +20,7 @@ Run:
 ruby scripts/validate_theme.rb
 npx --yes csstree-validator@4.0.1 stylesheets
 node --check javascripts/theme.js
-node --test tests/theme_sidebar_test.js
+node --test tests/*.js
 ```
 
 To resolve core references against the real release:
@@ -34,8 +34,9 @@ docker run --rm \
 
 These checks validate structure, import order, CSS URL resolution, permitted
 core assets, bundled Font Awesome glyphs, balanced CSS blocks, exact Redmine
-version metadata, the sidebar runtime contract, CSS grammar/values, and
-JavaScript syntax. They do not prove visual correctness.
+version metadata, the sidebar and customer-autocomplete runtime contracts, CSS
+grammar/values, JavaScript syntax, and dependency-free behavior tests. They do
+not prove visual correctness.
 
 ## Recorded baseline smoke test
 
@@ -54,6 +55,12 @@ detail, issue list with filters, issue-edit form and text toolbar, Gantt,
 persistent sidebar collapse/restore, a page without sidebar content, and the
 native mobile flyout at 1440 px and 800 px viewports. Optional plugin pages
 remain unverified.
+
+The customer-autocomplete baseline used an actual multi-value list custom field
+with database ID `4` in the official container's issue-create form. The live DOM
+produced the expected localized combobox and dark presentation; dependency-free
+tests cover selection, `change` dispatch, keyboard removal, normalized search,
+and dynamic insertion.
 
 ## Manual core-page matrix
 
@@ -81,6 +88,22 @@ For any visual release, test both a desktop viewport and a viewport below
 | Page with `#main.nosidebar` | No theme sidebar button is created. |
 | Viewport below 900 px | Theme button is hidden and Redmine's native flyout contains sidebar links. |
 | Local storage blocked | Toggle works for the current page; failure is caught without breaking navigation. |
+
+## Customer autocomplete contract
+
+| Condition | Expected behavior |
+| --- | --- |
+| `issue_custom_field_values_4` is present | Native select is progressively enhanced with search and removable chips. |
+| Another custom field is present | No autocomplete is inserted for that field. |
+| Search contains different case or omitted accents | Matching option labels remain discoverable. |
+| Keyboard navigation | Arrows move through results, Enter selects, Escape/Tab close, and empty-query Backspace removes the last chip. |
+| Selection changes | Native option state changes and a bubbling `change` event is dispatched. |
+| Form is inserted dynamically | One wrapper and one dropdown are initialized without duplicates. |
+| JavaScript is unavailable | Original Redmine select remains visible and submittable. |
+
+The ID `4` is installation-specific and does not imply that other Redmine
+instances use the same customer field. Map and smoke-test the target instance
+before changing it.
 
 ## Plugin coverage
 

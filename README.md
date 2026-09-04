@@ -22,6 +22,8 @@ calendars, and administration screens.
   radii, shadows, and interaction states.
 - Collapsible desktop sidebar with an accessible toggle and a locally persisted
   preference.
+- Searchable customer chips for the instance-specific custom field 4, with
+  keyboard navigation and no server-side dependency.
 - Responsive Redmine flyout behavior below 899 px.
 - Local Font Awesome 5.15.2 solid webfont for interface icons.
 - Styling for issues, workflows, progress, wiki/code, repository diffs, Gantt,
@@ -78,9 +80,10 @@ Redmine 5.1.4 core CSS
   → custom.css      narrow, last-loaded fixes
 ```
 
-`javascripts/theme.js` progressively adds the desktop sidebar control. The
-theme remains fully usable when JavaScript or local storage is unavailable; in
-that case the sidebar stays visible. See
+`javascripts/theme.js` progressively adds the desktop sidebar control and the
+customer autocomplete described below. The theme remains usable when
+JavaScript or local storage is unavailable; in that case native Redmine form
+controls and the visible sidebar remain available. See
 [Theme architecture](docs/ARCHITECTURE.md) for the full file and dependency map.
 
 ## Sidebar control
@@ -89,6 +92,19 @@ On pages that contain a sidebar, use the chevron button on its left edge to
 hide or restore it. The choice is stored only in the current browser and is
 reapplied on later pages. The control is intentionally absent on pages without
 a sidebar and below 900 px, where Redmine's native flyout menu owns navigation.
+
+## Customer autocomplete
+
+When an issue form contains the select `issue_custom_field_values_4`, the theme
+enhances it with an accent-insensitive customer search and removable chips. The
+original select remains the submitted form control, so Redmine receives the
+same option values and `change` events as it would without the enhancement.
+
+The control supports mouse input plus Arrow Up/Down, Enter, Escape, Tab, and
+Backspace. It is initialized only after the target field exists and can also
+handle forms inserted dynamically. This field ID is installation-specific: if
+the customer field has another ID, update `SELECT_ID` in
+`javascripts/theme.js` and test the issue create/edit forms before deployment.
 
 ## Customization
 
@@ -128,7 +144,7 @@ CSS grammar and value validator:
 ruby scripts/validate_theme.rb
 npx --yes csstree-validator@4.0.1 stylesheets
 node --check javascripts/theme.js
-node --test tests/theme_sidebar_test.js
+node --test tests/*.js
 ```
 
 When Docker is available, validate core paths against the exact Redmine image:

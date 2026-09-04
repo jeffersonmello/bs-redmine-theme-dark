@@ -23,6 +23,7 @@ Maintain a static, CSS-first theme that remains installable as
   and refreshed presentation in `modern.css`, plugin selectors in
   `plugins.css`, and narrow late overrides in `custom.css`.
 - Preserve the accessible desktop sidebar toggle in `javascripts/theme.js`.
+  Preserve the isolated custom-field 4 customer autocomplete in that entrypoint.
   Keep presentation in CSS and JavaScript dependency-free.
 - Use core 5.1.4 evidence for core asset names and selectors. Do not infer from
   newer Redmine releases.
@@ -34,7 +35,7 @@ Maintain a static, CSS-first theme that remains installable as
 Run `ruby scripts/validate_theme.rb`, then
 `npx --yes csstree-validator@4.0.1 stylesheets` and
 `node --check javascripts/theme.js` and
-`node --test tests/theme_sidebar_test.js`. For visual changes, exercise
+`node --test tests/*.js`. For visual changes, exercise
 the relevant matrix in `docs/COMPATIBILITY.md`; report untested cases plainly.
 Update public docs and the active task list when compatibility or behavior
 changes.

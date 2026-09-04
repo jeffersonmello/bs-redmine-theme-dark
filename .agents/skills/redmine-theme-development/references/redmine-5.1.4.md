@@ -42,10 +42,15 @@ Do not use the upstream default branch as compatibility evidence.
 - Desktop sidebar behavior relies on Redmine's `#main`, `#sidebar`, and
   `#content` layout IDs. Below 900 px, Redmine's native flyout remains the owner
   of sidebar navigation.
+- The customer autocomplete is an instance-specific enhancement for
+  `issue_custom_field_values_4`; it is not a Redmine-wide field convention.
 
 ## Visual regression surfaces
 
 At minimum inspect login, project list, issue list and filters, issue detail and
 edit forms, wiki preview and code highlighting, repository diff, Gantt or
 calendar, administration forms, context menus, and the mobile flyout below
-899 px. Add relevant plugin pages only when those plugins are in scope.
+899 px. When customer autocomplete changes, add a multi-value list custom field
+with database ID 4 and verify issue create/edit, native option submission,
+dynamic insertion, and keyboard use. Add relevant plugin pages only when those
+plugins are in scope.

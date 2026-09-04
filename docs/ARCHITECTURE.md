@@ -18,9 +18,11 @@ flowchart LR
     P --> C[custom.css<br/>late targeted fixes]
     S --> F[Bundled Font Awesome 5.15.2]
     S --> I[Theme and Redmine core images]
-    R --> J[theme.js<br/>sidebar enhancement]
+    R --> J[theme.js<br/>progressive enhancements]
     J --> B[body.theme-sidebar-collapsed]
     B --> M
+    J --> U[custom field 4<br/>customer autocomplete]
+    U --> M
 ```
 
 The order is behavioral: later stylesheets can intentionally correct earlier
@@ -38,7 +40,7 @@ specificity without duplicating the Redmine core stylesheet.
 | `stylesheets/plugins/redmine_wysiwyg_editor.css` | Legacy TinyMCE/WYSIWYG integration; present but not imported by default. |
 | `images/` | Time-tracking icons and a WYSIWYG modal texture owned by the theme. |
 | `webfonts/` | Font Awesome 5.15.2 solid font in browser-compatible formats. |
-| `javascripts/theme.js` | Accessible desktop sidebar toggle and local preference persistence. |
+| `javascripts/theme.js` | Isolated progressive enhancements for the accessible sidebar toggle and the instance-specific customer autocomplete. |
 | `screenshot.png` | Historical design reference. |
 | `scripts/validate_theme.rb` | Offline structure, path, glyph, and version-aware validation. |
 
@@ -65,8 +67,9 @@ normalizes those domains through semantic design tokens and focused overrides:
 - Theme images use paths relative to the theme stylesheet. A small set of core
   Redmine images uses `../../../images/`, which resolves from an installed theme
   back to `public/images/`.
-- Sidebar behavior uses a small dependency-free script. No Sass, bundler, Node
-  runtime, or compiled artifact is required in production.
+- Sidebar and customer-autocomplete behavior use small dependency-free modules.
+  No Sass, bundler, Node runtime, or compiled artifact is required in
+  production.
 
 ## Sidebar behavior
 
@@ -83,6 +86,21 @@ Below 900 px, the button is hidden, the collapse class has no layout effect,
 and Redmine's native flyout receives the sidebar content. Storage access is
 guarded, so privacy modes that block `localStorage` keep a functional visible
 sidebar.
+
+## Customer autocomplete behavior
+
+The second isolated module in `theme.js` activates only when Redmine renders
+`select#issue_custom_field_values_4`. After successful initialization, it hides
+the native select visually but retains it as the submitted form control. Search
+and chip operations update native `<option>.selected` state and dispatch a
+bubbling `change` event, preserving Redmine and plugin listeners.
+
+The generated input follows combobox/listbox semantics and supports pointer,
+Arrow Up/Down, Enter, Escape, Tab, and Backspace interactions. Option labels are
+matched case- and accent-insensitively, up to 80 visible results. A guarded
+`MutationObserver` supports dynamically inserted issue forms without creating
+duplicate controls. All presentation remains in `modern.css`; when JavaScript
+does not run, Redmine's original select remains visible and functional.
 
 ## Plugin boundary
 
@@ -106,3 +124,6 @@ visual test of the installed plugin version.
   markup.
 - The sidebar toggle depends on the stable Redmine 5.1.4 IDs `main`, `sidebar`,
   and `content`; the validator records that runtime contract.
+- The customer autocomplete is intentionally instance-specific and depends on
+  the Redmine custom-field ID `issue_custom_field_values_4`. Other installations
+  must map and test their own field ID before changing this selector.

@@ -15,6 +15,8 @@ applyTo: "stylesheets/**/*.css"
   into the base theme.
 - Add refreshed shared presentation to `modern.css`; do not duplicate its
   design tokens with new hard-coded palette values.
+- Keep the `tm-clientes-*` autocomplete presentation in `modern.css`; the
+  JavaScript must not carry inline theme colors.
 - Avoid adding `!important` unless overriding Redmine or plugin specificity
   requires it. Do not mechanically remove existing uses without visual tests.
 - Check foreground/background contrast, focus visibility, hover states, table

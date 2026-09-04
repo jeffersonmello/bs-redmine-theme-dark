@@ -12,5 +12,7 @@ asset, load-order, and validation decisions.
 Keep scope within the active spec. Preserve the CSS cascade and separate core,
 plugin, and local overrides. Verify theme-local asset references, bundled font
 glyphs, the accessible sidebar state, CSS/JavaScript syntax, and documentation.
+Preserve the native select and keyboard/ARIA behavior when changing the
+instance-specific customer autocomplete for custom field 4.
 Run the repository validation commands and report any visual checks that still
 require a live Redmine instance.

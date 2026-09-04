@@ -26,6 +26,7 @@ manager required by the theme at runtime.
 - `stylesheets/plugins/redmine_wysiwyg_editor.css` is optional and is not
   imported by default.
 - Keep the accessible, persistent sidebar behavior in `javascripts/theme.js`.
+  Keep the custom-field 4 customer autocomplete isolated in the same entrypoint.
   Prefer CSS for presentation and keep JavaScript dependency-free.
 - Preserve bundled Font Awesome files and their notice. Do not change or
   regenerate third-party binaries without updating `THIRD_PARTY_NOTICES.md`.
@@ -51,7 +52,7 @@ Run before handing off any change:
 ruby scripts/validate_theme.rb
 npx --yes csstree-validator@4.0.1 stylesheets
 node --check javascripts/theme.js
-node --test tests/theme_sidebar_test.js
+node --test tests/*.js
 ```
 
 When Docker is available, also validate against the actual Redmine release:
