@@ -13,5 +13,6 @@ Read in this order before implementation:
 Use `.claude/skills/specdrive/SKILL.md` for the spec-driven workflow and
 `.agents/skills/redmine-theme-development/SKILL.md` for theme-specific work.
 Validate with `ruby scripts/validate_theme.rb` and
-`npx --yes csstree-validator@4.0.1 stylesheets`.
-
+`npx --yes csstree-validator@4.0.1 stylesheets`, then run
+`node --check javascripts/theme.js` and
+`node --test tests/theme_sidebar_test.js`.

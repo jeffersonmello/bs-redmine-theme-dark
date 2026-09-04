@@ -19,6 +19,8 @@ Run:
 ```sh
 ruby scripts/validate_theme.rb
 npx --yes csstree-validator@4.0.1 stylesheets
+node --check javascripts/theme.js
+node --test tests/theme_sidebar_test.js
 ```
 
 To resolve core references against the real release:
@@ -32,7 +34,8 @@ docker run --rm \
 
 These checks validate structure, import order, CSS URL resolution, permitted
 core assets, bundled Font Awesome glyphs, balanced CSS blocks, exact Redmine
-version metadata, and CSS grammar/values. They do not prove visual correctness.
+version metadata, the sidebar runtime contract, CSS grammar/values, and
+JavaScript syntax. They do not prove visual correctness.
 
 ## Recorded baseline smoke test
 
@@ -45,6 +48,12 @@ desktop and 800 px widths.
 This is an installation and rendering smoke test, not certification of every
 authenticated surface or optional plugin. Those checks remain in the manual
 matrix below.
+
+The modern-interface baseline additionally exercised an authenticated issue
+detail, issue list with filters, issue-edit form and text toolbar, Gantt,
+persistent sidebar collapse/restore, a page without sidebar content, and the
+native mobile flyout at 1440 px and 800 px viewports. Optional plugin pages
+remain unverified.
 
 ## Manual core-page matrix
 
@@ -63,12 +72,22 @@ For any visual release, test both a desktop viewport and a viewport below
 | Administration | Tabs, side navigation, settings, workflows, custom fields, disabled controls. |
 | Responsive flyout | Header, project switcher, menu, avatar, content/sidebar behavior. |
 
+## Collapsible sidebar contract
+
+| Condition | Expected behavior |
+| --- | --- |
+| Desktop page with sidebar | Chevron is keyboard-accessible and exposes `aria-controls="sidebar"`. |
+| Sidebar hidden | Content expands, button reports `aria-expanded="false"`, and the choice persists locally. |
+| Page with `#main.nosidebar` | No theme sidebar button is created. |
+| Viewport below 900 px | Theme button is hidden and Redmine's native flyout contains sidebar links. |
+| Local storage blocked | Toggle works for the current page; failure is caught without breaking navigation. |
+
 ## Plugin coverage
 
 | Styling present | Default state | Compatibility statement |
 | --- | --- | --- |
 | Redmine Agile / CRM / CMS / timesheet / Favorite Project / Mega Calendar selectors | Active in `plugins.css` | Version compatibility unverified; test the installed version. |
-| Smile sidebar toggle | Active; toggle hidden below 899 px | Version compatibility unverified. |
+| Smile sidebar toggle | Legacy control suppressed after the theme control initializes | Version compatibility unverified. |
 | Work Time icon states | Active in `style.css` | Asset references resolve; plugin behavior is unverified. |
 | Redmine WYSIWYG Editor / TinyMCE | Disabled import | Legacy optional stylesheet; opt in and test before use. |
 

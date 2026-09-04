@@ -11,6 +11,6 @@ asset, load-order, and validation decisions.
 
 Keep scope within the active spec. Preserve the CSS cascade and separate core,
 plugin, and local overrides. Verify theme-local asset references, bundled font
-glyphs, CSS syntax, and documentation. Run the repository validation commands
-and report any visual checks that still require a live Redmine instance.
-
+glyphs, the accessible sidebar state, CSS/JavaScript syntax, and documentation.
+Run the repository validation commands and report any visual checks that still
+require a live Redmine instance.

@@ -20,6 +20,8 @@ Contributions should preserve the theme's static deployment model and explicit
 ```sh
 ruby scripts/validate_theme.rb
 npx --yes csstree-validator@4.0.1 stylesheets
+node --check javascripts/theme.js
+node --test tests/theme_sidebar_test.js
 ```
 
 Docker can bind the checkout read-only to validate exact core references:
@@ -33,4 +35,3 @@ docker run --rm \
 
 Describe visual checks in the pull request. If a plugin or browser was not
 available, say so rather than generalizing from static validation.
-

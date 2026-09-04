@@ -1,4 +1,5 @@
 @import url(../../../stylesheets/application.css);
 @import url(style.css);
+@import url(modern.css);
 @import url(plugins.css);
 @import url(custom.css);

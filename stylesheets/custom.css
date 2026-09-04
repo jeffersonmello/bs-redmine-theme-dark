@@ -7,48 +7,55 @@ h3,
 h4,
 h5,
 h6 {
-    color: #fff;
+    color: var(--theme-text);
 }
 
 #project-jump .drdn-items > * {
-    color: #b4b4b4 !important;
+    color: var(--theme-text-soft) !important;
 }
 
 .wiki-preview {
-    background: #27292e !important;
+    background: var(--theme-shell) !important;
 }
 
 div.wiki pre {
-    background-color: #27292e !important;
-    color: #fff !important;
+    color: #dbeafe !important;
+    background-color: #0a0f17 !important;
 }
 
 .syntaxhl {
-    background: #27292e !important;
+    color: #dbeafe !important;
+    background: #0a0f17 !important;
 }
 
 .check_box_group {
-    background: #27292e !important;
+    background: var(--theme-surface-raised) !important;
+    border: 1px solid var(--theme-border) !important;
+    border-radius: var(--theme-radius-sm);
 }
 
 .syntaxhl .s {
-    background-color: #93814e !important;
+    color: #fde68a !important;
+    background-color: transparent !important;
 }
 
 .syntaxhl .s1 {
-    background-color: #93814e !important;
+    color: #fde68a !important;
+    background-color: transparent !important;
 }
 
 .syntaxhl .s2 {
-    background-color: #b18300 !important;
+    color: #fcd34d !important;
+    background-color: transparent !important;
 }
 
 .syntaxhl .dl {
-    background-color: #b18300 !important;
+    color: #fcd34d !important;
+    background-color: transparent !important;
 }
 
 .syntaxhl .o {
-    color: #939393 !important;
+    color: #94a3b8 !important;
 }
 
 .syntaxhl .mi {
@@ -62,37 +69,39 @@ div.wiki pre {
 /* SCM */
 
 table.filecontent {
-    border: 1px solid #464242 !important;
-    background-color: #464242 !important;
+    color: var(--theme-text-soft) !important;
+    background-color: #0a0f17 !important;
+    border: 1px solid var(--theme-border) !important;
+    border-radius: var(--theme-radius-md);
 }
 
 table.filecontent th.line-num {
-    border: 1px solid #464242 !important;
-    color: #fff !important;
+    color: var(--theme-text-muted) !important;
+    border: 1px solid var(--theme-border) !important;
 }
 
 table.filecontent th {
-    background-color: #464242 !important;
+    background-color: var(--theme-surface-raised) !important;
 }
 
 .diff_in {
-    background: #cfc !important;
-    color: #5e5555 !important;
+    color: #bbf7d0 !important;
+    background: rgba(34, 197, 94, 0.18) !important;
 }
 
 .diff_out {
-    background: #fcc !important;
-    color: #5e5555 !important;
+    color: #fecdd3 !important;
+    background: rgba(244, 63, 94, 0.18) !important;
 }
 
 table.filecontent tr.spacing td {
-    background: #3a3d3f !important;
+    background: var(--theme-surface) !important;
 }
 
 table.filecontent th.filename {
-    background-color: #3a3d3f !important;
+    background-color: var(--theme-surface) !important;
 }
 
 table.filecontent th {
-    border: 1px solid #3a3d3f !important;
+    border: 1px solid var(--theme-border) !important;
 }

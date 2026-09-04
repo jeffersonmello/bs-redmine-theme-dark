@@ -11,6 +11,8 @@ and release preparation.
   `javascripts/theme.js` entry point.
 - The theme imports the core stylesheet with
   `../../../stylesheets/application.css` before its own overrides.
+- The theme then loads `style.css`, `modern.css`, `plugins.css`, and
+  `custom.css` in that order.
 - Theme-owned files resolve from the theme directory. Core images referenced
   from `stylesheets/style.css` resolve through `../../../images/`.
 
@@ -31,13 +33,15 @@ Do not use the upstream default branch as compatibility evidence.
 
 - Numeric `.status-N` and `.priority-N` rules reflect one Redmine database and
   may not match another installation's workflow IDs.
-- Roboto is loaded from Google Fonts. Without network access the CSS falls back
-  to the generic sans-serif family.
+- Typography uses a local system font stack; no remote font service is needed.
 - Font Awesome 5.15.2 is bundled locally and drives most `::before` icons.
 - `plugins/redmine_wysiwyg_editor.css` targets legacy TinyMCE class names and is
   deliberately opt-in.
 - The historical screenshot is a design reference, not proof of current plugin
   compatibility.
+- Desktop sidebar behavior relies on Redmine's `#main`, `#sidebar`, and
+  `#content` layout IDs. Below 900 px, Redmine's native flyout remains the owner
+  of sidebar navigation.
 
 ## Visual regression surfaces
 
@@ -45,4 +49,3 @@ At minimum inspect login, project list, issue list and filters, issue detail and
 edit forms, wiki preview and code highlighting, repository diff, Gantt or
 calendar, administration forms, context menus, and the mobile flyout below
 899 px. Add relevant plugin pages only when those plugins are in scope.
-

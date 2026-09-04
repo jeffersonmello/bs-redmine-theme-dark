@@ -18,15 +18,15 @@ manager required by the theme at runtime.
 ## Architecture invariants
 
 - `stylesheets/application.css` must import, in order, the Redmine core CSS,
-  `style.css`, `plugins.css`, and `custom.css`.
+  `style.css`, `modern.css`, `plugins.css`, and `custom.css`.
 - Keep the core import as `../../../stylesheets/application.css`; the theme is
   installed at `public/themes/bs-redmine-theme-dark` on Redmine 5.1.4.
 - Put broad theme rules in `style.css`, active plugin overrides in
   `plugins.css`, and narrow late overrides in `custom.css`.
 - `stylesheets/plugins/redmine_wysiwyg_editor.css` is optional and is not
   imported by default.
-- Keep `javascripts/theme.js` present. Prefer CSS; add JavaScript only when CSS
-  cannot express the required behavior.
+- Keep the accessible, persistent sidebar behavior in `javascripts/theme.js`.
+  Prefer CSS for presentation and keep JavaScript dependency-free.
 - Preserve bundled Font Awesome files and their notice. Do not change or
   regenerate third-party binaries without updating `THIRD_PARTY_NOTICES.md`.
 
@@ -50,6 +50,8 @@ Run before handing off any change:
 ```sh
 ruby scripts/validate_theme.rb
 npx --yes csstree-validator@4.0.1 stylesheets
+node --check javascripts/theme.js
+node --test tests/theme_sidebar_test.js
 ```
 
 When Docker is available, also validate against the actual Redmine release:
@@ -74,4 +76,3 @@ support.
 - Mark a task complete only after its acceptance criterion is demonstrably met.
 - Write public documentation in English; keep identifiers, commands, paths,
   product names, and exact version strings unchanged.
-

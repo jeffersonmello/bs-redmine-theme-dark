@@ -8,18 +8,20 @@ Supported plugins
 /*@import url(plugins/redmine_wysiwyg_editor.css);*/
 /* Mega Kalendář */
 .fc-event {
-  background-color: rgb(150, 200, 255) !important;
-  border-color: rgb(150, 200, 255) !important;
+  color: #06131b !important;
+  background-color: var(--theme-accent) !important;
+  border-color: var(--theme-accent) !important;
+  border-radius: var(--theme-radius-sm) !important;
 }
 
 .fc-event.fc-start {
   border-left-width: 2px;
-  border-left-color: rgb(100, 150, 255) !important;
+  border-left-color: #bae6fd !important;
 }
 
 .fc-event.fc-end {
   border-right-width: 2px;
-  border-right-color: rgb(100, 150, 255) !important;
+  border-right-color: #bae6fd !important;
 }
 
 /* CMS plugin */
@@ -32,15 +34,18 @@ Supported plugins
 
 /* CRM plugin */
 .controller-contacts #content {
-  width: calc(100% - 450px);
+  width: auto !important;
 }
 
 .controller-contacts #sidebar {
-  width: 350px;
-  margin: 20px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 5px;
+  flex-basis: var(--theme-sidebar-width);
+  width: var(--theme-sidebar-width);
+  margin: 1.5rem 1.5rem 1.5rem 0;
+  padding: 1.15rem;
+  color: var(--theme-text-soft);
+  background: var(--theme-surface);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-lg);
 }
 
 table.note_data td.name h4 {
@@ -48,27 +53,27 @@ table.note_data td.name h4 {
 }
 
 table.contacts.index {
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid var(--theme-border) !important;
   border-right: 0 !important;
   border-left: 0 !important;
   border-bottom: 0 !important;
 }
 
 table.contacts.index td {
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid var(--theme-border) !important;
   border-bottom: 0 !important;
 }
 
 table.contacts.index tbody tr:hover {
-  background-color: #27292e !important;
+  background-color: var(--theme-accent-soft) !important;
 }
 
 table.contacts.index .context-menu-selection {
-  background-color: #204050 !important;
+  background-color: rgba(14, 165, 233, 0.24) !important;
 }
 
 table.contacts.index .context-menu-selection:hover {
-  background-color: #27292e !important;
+  background-color: rgba(14, 165, 233, 0.3) !important;
 }
 
 table.sidebar.attributes th {
@@ -76,10 +81,10 @@ table.sidebar.attributes th {
 }
 
 div.contact {
-  background-color: #191c20 !important;
-  padding: 10px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 4px;
+  background-color: var(--theme-surface) !important;
+  padding: 1rem !important;
+  border: 1px solid var(--theme-border) !important;
+  border-radius: var(--theme-radius-md);
 }
 
 #content div.contact h1 {
@@ -87,7 +92,9 @@ div.contact {
 }
 
 .controller-contacts form#add_issue_form {
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: var(--theme-surface) !important;
+  border: 1px solid var(--theme-border) !important;
+  border-radius: var(--theme-radius-md);
   padding: 20px !important;
   width: 83% !important;
 }
@@ -102,7 +109,7 @@ div.contact {
 }
 
 .agile-board table.list.issues-board tbody tr, .agile-board table.list.issues-board tbody tr:hover {
-    background-color: transparent!important;
+  background-color: transparent !important;
 }
 
 /* timesheet plugin */
@@ -116,8 +123,8 @@ div.contact {
 }
 
 #timesheet-form input:not([type=submit]), #timesheet-form select {
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  background-color: #2a3038 !important;
+  border: 1px solid var(--theme-border) !important;
+  background-color: var(--theme-surface-raised) !important;
 }
 
 label.select-all {
@@ -128,14 +135,15 @@ label.select-all {
 div.project_card {
   width: 300px !important;
   padding: 20px !important;
-	background: #191c20 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 4px
+  background: var(--theme-surface) !important;
+  border: 1px solid var(--theme-border) !important;
+  border-radius: var(--theme-radius-md);
+  box-shadow: var(--theme-shadow-sm);
 }
 
 div.project_card .parent>h4 {
   width: auto !important;
-  color: #666 !important;
+  color: var(--theme-text-muted) !important;
 }
 
 div.project_card .parent div:last-child {
@@ -145,7 +153,7 @@ div.project_card .parent div:last-child {
 
 div.project_card div.title {
   width: 100% !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-bottom: 1px solid var(--theme-border) !important;
   padding: 5px 0;
 }
 

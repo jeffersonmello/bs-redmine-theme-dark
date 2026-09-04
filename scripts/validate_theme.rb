@@ -8,9 +8,11 @@ TARGET_REDMINE = "5.1.4"
 REQUIRED_FILES = %w[
   stylesheets/application.css
   stylesheets/style.css
+  stylesheets/modern.css
   stylesheets/plugins.css
   stylesheets/custom.css
   javascripts/theme.js
+  tests/theme_sidebar_test.js
   webfonts/fa-solid-900.eot
   webfonts/fa-solid-900.svg
   webfonts/fa-solid-900.ttf
@@ -23,6 +25,7 @@ REQUIRED_FILES = %w[
 EXPECTED_IMPORTS = %w[
   ../../../stylesheets/application.css
   style.css
+  modern.css
   plugins.css
   custom.css
 ].freeze
@@ -38,6 +41,33 @@ warnings = []
 
 REQUIRED_FILES.each do |relative|
   errors << "missing required file: #{relative}" unless ROOT.join(relative).file?
+end
+
+modern_css = ROOT.join("stylesheets/modern.css")
+if modern_css.file?
+  contents = modern_css.read
+  {
+    "modern design tokens" => "--theme-surface",
+    "desktop sidebar collapse rule" => "body.theme-sidebar-collapsed #sidebar",
+    "visible keyboard focus" => ":focus-visible",
+    "responsive sidebar boundary" => "max-width: 899px"
+  }.each do |contract, snippet|
+    errors << "modern.css is missing #{contract}: #{snippet}" unless contents.include?(snippet)
+  end
+end
+
+theme_js = ROOT.join("javascripts/theme.js")
+if theme_js.file?
+  contents = theme_js.read
+  {
+    "sidebar toggle control" => "theme-sidebar-toggle",
+    "persistent preference" => "localStorage",
+    "accessible expanded state" => "aria-expanded",
+    "desktop viewport boundary" => "min-width: 900px",
+    "pages without a sidebar guard" => "nosidebar"
+  }.each do |contract, snippet|
+    errors << "theme.js is missing #{contract}: #{snippet}" unless contents.include?(snippet)
+  end
 end
 
 application_css = ROOT.join("stylesheets/application.css")
@@ -121,7 +151,7 @@ if redmine_root
   end
 end
 
-warnings << "runtime uses remote CSS: #{remote_urls.uniq.join(', ')}" unless remote_urls.empty?
+errors << "runtime CSS must be self-contained; remote URLs found: #{remote_urls.uniq.join(', ')}" unless remote_urls.empty?
 warnings.each { |warning| warn "WARN: #{warning}" }
 
 if errors.empty?

@@ -13,11 +13,14 @@ under `public/themes/<theme-name>`.
 flowchart LR
     R[Redmine 5.1.4 HTML and core CSS] --> A[application.css]
     A --> S[style.css<br/>base dark theme]
-    S --> P[plugins.css<br/>active plugin overrides]
+    S --> M[modern.css<br/>design system and layout]
+    M --> P[plugins.css<br/>active plugin overrides]
     P --> C[custom.css<br/>late targeted fixes]
     S --> F[Bundled Font Awesome 5.15.2]
     S --> I[Theme and Redmine core images]
-    R --> J[theme.js<br/>reserved extension point]
+    R --> J[theme.js<br/>sidebar enhancement]
+    J --> B[body.theme-sidebar-collapsed]
+    B --> M
 ```
 
 The order is behavioral: later stylesheets can intentionally correct earlier
@@ -28,19 +31,21 @@ specificity without duplicating the Redmine core stylesheet.
 | Path | Responsibility |
 | --- | --- |
 | `stylesheets/application.css` | Entrypoint and immutable import order. |
-| `stylesheets/style.css` | Dark palette, layout, Redmine components, responsive rules, icons, status and priority presentation. |
+| `stylesheets/style.css` | Legacy-compatible selector coverage, Font Awesome mappings, status and priority presentation. |
+| `stylesheets/modern.css` | Design tokens, system typography, component refresh, accessible focus, flexible desktop layout, and responsive refinements. |
 | `stylesheets/plugins.css` | Active optional-plugin overrides kept out of the core layer. |
 | `stylesheets/custom.css` | Last-loaded fixes for wiki highlighting, SCM file views, diffs, and small local corrections. |
 | `stylesheets/plugins/redmine_wysiwyg_editor.css` | Legacy TinyMCE/WYSIWYG integration; present but not imported by default. |
 | `images/` | Time-tracking icons and a WYSIWYG modal texture owned by the theme. |
 | `webfonts/` | Font Awesome 5.15.2 solid font in browser-compatible formats. |
-| `javascripts/theme.js` | Deliberately behavior-free Redmine theme entrypoint. |
+| `javascripts/theme.js` | Accessible desktop sidebar toggle and local preference persistence. |
 | `screenshot.png` | Historical design reference. |
 | `scripts/validate_theme.rb` | Offline structure, path, glyph, and version-aware validation. |
 
 ## Styling domains
 
-`style.css` contains roughly 350 rule blocks across these domains:
+`style.css` retains roughly 350 legacy-compatible rule blocks. `modern.css`
+normalizes those domains through semantic design tokens and focused overrides:
 
 - global palette, typography, links, and headings;
 - fixed top menu, header, project switcher, project navigation, content, sidebar,
@@ -54,14 +59,30 @@ specificity without duplicating the Redmine core stylesheet.
 
 ## Assets and dependencies
 
-- Roboto 400/400 italic/700 is requested from Google Fonts. Offline rendering
-  uses the generic `sans-serif` fallback.
+- Typography uses a native system sans-serif stack and does not require a font
+  service.
 - Font Awesome 5.15.2 is local, so primary interface icons do not require a CDN.
 - Theme images use paths relative to the theme stylesheet. A small set of core
   Redmine images uses `../../../images/`, which resolves from an installed theme
   back to `public/images/`.
-- No JavaScript, Sass, bundler, Node runtime, or compiled artifact is required
-  in production.
+- Sidebar behavior uses a small dependency-free script. No Sass, bundler, Node
+  runtime, or compiled artifact is required in production.
+
+## Sidebar behavior
+
+Redmine 5.1.4 renders `#main` as a reverse-row flex container containing
+`#sidebar` and `#content`. On desktop, the theme constrains the sidebar with a
+responsive custom-property width and lets content flex into the remaining
+space. `theme.js` inserts a real button only when the page has sidebar content.
+It toggles `body.theme-sidebar-collapsed`, updates its accessible state, and
+stores a boolean under `bs-redmine-theme-dark.sidebar-collapsed`.
+When the optional Smile plugin exposes `#toggle-sidebar`, the theme suppresses
+that legacy control after initialization to avoid two competing toggles.
+
+Below 900 px, the button is hidden, the collapse class has no layout effect,
+and Redmine's native flyout receives the sidebar content. Storage access is
+guarded, so privacy modes that block `localStorage` keep a functional visible
+sidebar.
 
 ## Plugin boundary
 
@@ -83,4 +104,5 @@ visual test of the installed plugin version.
 - Broad selectors and existing `!important` rules make import order significant.
 - The mobile presentation begins below 899 px and shares the Redmine flyout menu
   markup.
-
+- The sidebar toggle depends on the stable Redmine 5.1.4 IDs `main`, `sidebar`,
+  and `content`; the validator records that runtime contract.

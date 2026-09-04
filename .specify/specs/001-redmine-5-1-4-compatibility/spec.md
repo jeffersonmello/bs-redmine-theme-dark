@@ -48,6 +48,5 @@ without relying on obsolete Redmine 3 instructions.
 
 ## Known constraints
 
-- Roboto is fetched from Google Fonts and falls back to `sans-serif` offline.
 - Numeric status and priority classes depend on database IDs.
 - The WYSIWYG stylesheet is opt-in and targets legacy TinyMCE markup.

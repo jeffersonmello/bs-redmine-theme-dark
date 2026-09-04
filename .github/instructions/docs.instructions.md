@@ -13,4 +13,5 @@ applyTo: "**/*.md"
   `public/themes/bs-redmine-theme-dark`.
 - Keep README, architecture, compatibility notes, and active SpecDrive tasks in
   sync when behavior changes.
-
+- Document sidebar changes across desktop, `nosidebar`, storage-failure, and
+  native mobile-flyout states.

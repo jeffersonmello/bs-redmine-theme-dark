@@ -18,21 +18,25 @@ calendars, and administration screens.
 ## Highlights
 
 - Dark surfaces with cyan accents and clear table, form, flash, and modal states.
+- Semantic design tokens for a consistent, modern palette, spacing, borders,
+  radii, shadows, and interaction states.
+- Collapsible desktop sidebar with an accessible toggle and a locally persisted
+  preference.
 - Responsive Redmine flyout behavior below 899 px.
 - Local Font Awesome 5.15.2 solid webfont for interface icons.
 - Styling for issues, workflows, progress, wiki/code, repository diffs, Gantt,
   calendars, Select2, context menus, and administration pages.
 - Isolated plugin overrides and a final customization layer.
-- No production build step or JavaScript dependency.
+- No production build step or external JavaScript dependency.
 
 ## Requirements
 
 - `Redmine 5.1.4.stable`.
 - Permission to copy or clone into the Redmine `public/themes` directory.
-- A browser with modern CSS and webfont support.
+- A browser with modern CSS, JavaScript, local-storage, and webfont support.
 
-Roboto is requested from Google Fonts. When it is unavailable, the theme falls
-back to the browser's generic `sans-serif` font. Font Awesome is bundled locally.
+The interface uses the operating system's native sans-serif stack. Font Awesome
+is bundled locally, so the theme makes no runtime font or icon CDN request.
 
 ## Installation
 
@@ -68,14 +72,23 @@ order:
 
 ```text
 Redmine 5.1.4 core CSS
-  → style.css       base dark theme and Redmine components
+  → style.css       legacy-compatible selector coverage
+  → modern.css      design system, accessibility, and flexible layout
   → plugins.css     active optional-plugin overrides
   → custom.css      narrow, last-loaded fixes
 ```
 
-`javascripts/theme.js` is retained as Redmine's theme extension point but is
-intentionally behavior-free. See [Theme architecture](docs/ARCHITECTURE.md) for
-the full file and dependency map.
+`javascripts/theme.js` progressively adds the desktop sidebar control. The
+theme remains fully usable when JavaScript or local storage is unavailable; in
+that case the sidebar stays visible. See
+[Theme architecture](docs/ARCHITECTURE.md) for the full file and dependency map.
+
+## Sidebar control
+
+On pages that contain a sidebar, use the chevron button on its left edge to
+hide or restore it. The choice is stored only in the current browser and is
+reapplied on later pages. The control is intentionally absent on pages without
+a sidebar and below 900 px, where Redmine's native flyout menu owns navigation.
 
 ## Customization
 
@@ -95,7 +108,7 @@ installed plugin version before production use.
 | Integration | State |
 | --- | --- |
 | Redmine Agile, CRM, CMS, timesheet, Favorite Project, and Mega Calendar-style views | Rules active in `stylesheets/plugins.css`; installed versions are unverified. |
-| Smile sidebar toggle | Rule active; the toggle is hidden below 899 px. |
+| Smile sidebar toggle | Legacy control is suppressed when the theme-owned sidebar control initializes; plugin behavior remains unverified. |
 | Work Time controls | Start, active-clock, and pause assets are included. |
 | Redmine WYSIWYG Editor / TinyMCE | Legacy stylesheet available but disabled by default. |
 
@@ -114,6 +127,8 @@ CSS grammar and value validator:
 ```sh
 ruby scripts/validate_theme.rb
 npx --yes csstree-validator@4.0.1 stylesheets
+node --check javascripts/theme.js
+node --test tests/theme_sidebar_test.js
 ```
 
 When Docker is available, validate core paths against the exact Redmine image:
