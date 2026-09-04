@@ -80,6 +80,7 @@ class FakeElement {
     this.currentSrc = "";
     this._src = "";
     this.eligibleImage = false;
+    this.open = false;
   }
 
   get className() {
@@ -127,6 +128,18 @@ class FakeElement {
   removeAttribute(name) {
     this.attributes.delete(name);
     if (name === "src") this._src = "";
+  }
+
+  showModal() {
+    if (this.tagName !== "DIALOG") throw new Error("showModal requires a dialog");
+    this.open = true;
+    this.setAttribute("open", "");
+  }
+
+  close() {
+    if (this.tagName !== "DIALOG") throw new Error("close requires a dialog");
+    this.open = false;
+    this.removeAttribute("open");
   }
 
   matches(selector) {
@@ -295,7 +308,9 @@ test("opens Redmine 5.1.4 attachment thumbnails in an accessible modal", () => {
   const close = byClass(document, "theme-lightbox__close");
 
   assert.equal(click.defaultPrevented, true);
+  assert.equal(modal.tagName, "DIALOG");
   assert.equal(modal.hidden, false);
+  assert.equal(modal.open, true);
   assert.equal(modal.getAttribute("role"), "dialog");
   assert.equal(modal.getAttribute("aria-modal"), "true");
   assert.equal(modal.getAttribute("aria-hidden"), "false");
@@ -311,6 +326,7 @@ test("opens Redmine 5.1.4 attachment thumbnails in an accessible modal", () => {
 
   assert.equal(escape.defaultPrevented, true);
   assert.equal(modal.hidden, true);
+  assert.equal(modal.open, false);
   assert.equal(modal.getAttribute("aria-hidden"), "true");
   assert.equal(document.body.classList.contains("theme-lightbox-open"), false);
   assert.equal(document.activeElement, anchor);
@@ -330,6 +346,13 @@ test("opens Redmine 5.1.4 attachment thumbnails in an accessible modal", () => {
   document.dispatchEvent(new FakeEvent("click", { target: close, button: 0 }));
   assert.equal(modal.hidden, true);
   assert.equal(document.body.querySelectorAll(".theme-lightbox").length, 1);
+
+  document.dispatchEvent(new FakeEvent("click", { target: anchor, button: 0 }));
+  const cancel = new FakeEvent("cancel", { target: modal });
+  document.dispatchEvent(cancel);
+  assert.equal(cancel.defaultPrevented, true);
+  assert.equal(modal.hidden, true);
+  assert.equal(modal.open, false);
 });
 
 test("keeps avatars, emoji and modified attachment clicks out of the lightbox", () => {

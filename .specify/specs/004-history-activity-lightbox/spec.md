@@ -20,6 +20,11 @@ page and serves the original image from `/attachments/download/:id`. The theme
 can progressively intercept eligible image clicks and present the original in a
 modal without changing attachment permissions or server behavior.
 
+A production screenshot later showed the viewer appended after the page footer
+when its fixed-position presentation was unavailable or lost in the instance
+cascade. The modal lifecycle therefore also needs a browser top-layer contract,
+with fixed positioning retained as its compatibility fallback.
+
 ## Scope
 
 - Repair issue-history avatar, timeline, header, detail, and note alignment.
@@ -31,6 +36,8 @@ modal without changing attachment permissions or server behavior.
 - Resolve Redmine thumbnail/show URLs to the authorized original download URL.
 - Preserve native navigation for modified clicks and non-image links.
 - Support images and forms inserted dynamically.
+- Use the native dialog top layer when available and show a pointer cursor on
+  every eligible image trigger.
 
 ## Out of scope
 
@@ -59,4 +66,7 @@ modal without changing attachment permissions or server behavior.
 - [x] Gravatars, avatars, toolbar images, and modified clicks are not hijacked.
 - [x] Dynamically inserted eligible images are enhanced without duplicate
   handlers or modal elements.
+- [x] The viewer cannot fall into normal page flow when native modal support is
+  available, retains a fixed-position fallback, and eligible images show the
+  hand pointer cursor.
 - [x] The feature remains dependency-free and all Redmine 5.1.4 checks pass.

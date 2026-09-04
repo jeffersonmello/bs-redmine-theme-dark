@@ -21,6 +21,8 @@ sidebar override, and an unused JavaScript theme entry point.
   borders, radii, shadows, and interaction states.
 - Modernize navigation, cards, issue details, tables, forms, tabs, flashes,
   dialogs, pagination, code, calendar, and Gantt surfaces.
+- Keep the issue description toolbar visually separated from the editor and
+  preview borders.
 - Make desktop content/sidebar sizing flexible and avoid reserving sidebar space
   on pages that do not have one.
 - Add an accessible desktop sidebar toggle that persists its state locally.
@@ -48,6 +50,8 @@ sidebar override, and an unused JavaScript theme entry point.
   storage failures leave the feature usable.
 - [x] The toggle does not appear on `nosidebar` pages or below 900 px.
 - [x] Keyboard focus is visible and native form controls remain operable.
+- [x] Description toolbar buttons do not overlap the focused editor or preview
+  border.
 - [x] Runtime no longer requests Google Fonts.
 - [x] Static validation and JavaScript syntax checks pass.
 - [x] The official `redmine:5.1.4` container discovers and serves the theme.

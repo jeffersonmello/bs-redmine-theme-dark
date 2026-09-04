@@ -93,7 +93,7 @@ For any visual release, test both a desktop viewport and a viewport below
 | Login | Form width, labels, focus, submit, error flash. |
 | Home and projects | Cards, nested projects, top menu, project switcher. |
 | Issue list | Filters, options, table, selection, pagination, context menu, progress. |
-| Issue detail and edit | Attributes, status, priority, history, attachments, relations, forms. |
+| Issue detail and edit | Attributes, status, priority, history, attachments, relations, forms, and toolbar clearance above the description/preview border. |
 | Issue timer and time entry | Authorized start action, synchronized duplicated menus, reload persistence, finish navigation, prefilled hours, and retained native action. |
 | Issue comments/history | Circular avatars, timeline clearance, headers, changes, notes, thumbnails, avatar-disabled mode. |
 | Activity | Dark day headings and aligned icon/avatar/title/description/author event pairs. |
@@ -134,6 +134,8 @@ before changing it.
 | Condition | Expected behavior |
 | --- | --- |
 | Plain click on an eligible wiki/content image | One modal dialog opens without leaving the current page. |
+| Instance CSS changes the normal document cascade | Native `showModal()` keeps the viewer in the browser top layer; fixed full-viewport CSS remains the fallback. |
+| Pointer moves over an eligible image | The hand pointer indicates that the image is interactive. |
 | Redmine attachment or thumbnail URL | Preview uses the same-origin `/attachments/download/:id` route. |
 | Escape, close button, or backdrop | Dialog closes, body scrolling returns, and focus returns to the trigger. |
 | Keyboard on a bare eligible image | Enter or Space opens the dialog. |

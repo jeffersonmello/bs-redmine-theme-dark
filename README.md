@@ -19,6 +19,8 @@ calendars, and administration screens.
 ## Highlights
 
 - Dark surfaces with cyan accents and clear table, form, flash, and modal states.
+- Issue editor tabs and formatting controls with clear spacing above the
+  description and preview borders.
 - Semantic design tokens for a consistent, modern palette, spacing, borders,
   radii, shadows, and interaction states.
 - Collapsible desktop sidebar with an accessible toggle and a locally persisted
@@ -141,7 +143,9 @@ A plain click on an eligible image inside issue descriptions, comments, wikis,
 attachment thumbnails, or the activity feed opens a full-viewport preview.
 Redmine 5.1.4 thumbnail and attachment-page URLs are resolved to the authorized
 `/attachments/download/:id` image; no permission checks are bypassed and no
-third-party viewer is loaded.
+third-party viewer is loaded. Eligible images show the hand pointer, and the
+preview uses the browser's native modal layer with a fixed-position fallback so
+it cannot be rendered after the page footer.
 
 Use the close button, Escape, or the backdrop to dismiss the preview. Keyboard
 focus moves into the dialog and returns to the triggering image or link after

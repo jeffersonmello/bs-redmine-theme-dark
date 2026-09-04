@@ -12,6 +12,8 @@
 - [x] Repair activity day and event-pair presentation.
 - [x] Add the accessible dependency-free image lightbox.
 - [x] Add behavior tests and validator contracts.
+- [x] Harden the viewer with the native dialog top layer, fixed fallback, and
+  hand pointer after the production normal-flow regression.
 - [x] Update README, architecture, compatibility, and agent guidance.
 
 ## Validation

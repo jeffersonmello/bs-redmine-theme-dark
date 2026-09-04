@@ -617,7 +617,7 @@
           close: "Close preview",
           error: "The full-size image could not be loaded."
         };
-    var overlay = document.createElement("div");
+    var overlay = document.createElement("dialog");
     var title = document.createElement("h2");
     var stage = document.createElement("div");
     var closeButton = document.createElement("button");
@@ -668,12 +668,42 @@
     return lightbox;
   }
 
+  function showLightboxDialog(overlay) {
+    overlay.hidden = false;
+
+    if (typeof overlay.showModal === "function") {
+      try {
+        if (!overlay.open) {
+          overlay.showModal();
+        }
+        return;
+      } catch (_error) {
+        // The fixed-position CSS remains the fallback when the top layer fails.
+      }
+    }
+
+    overlay.setAttribute("open", "");
+  }
+
+  function hideLightboxDialog(overlay) {
+    if (typeof overlay.close === "function" && overlay.open) {
+      try {
+        overlay.close();
+      } catch (_error) {
+        // Removing the open attribute still closes the CSS fallback.
+      }
+    }
+
+    overlay.removeAttribute("open");
+    overlay.hidden = true;
+  }
+
   function closeLightbox() {
     if (!lightbox || lightbox.overlay.hidden) {
       return;
     }
 
-    lightbox.overlay.hidden = true;
+    hideLightboxDialog(lightbox.overlay);
     lightbox.overlay.setAttribute("aria-hidden", "true");
     lightbox.overlay.classList.remove("is-loading", "has-error");
     lightbox.preview.removeAttribute("src");
@@ -698,7 +728,7 @@
     refs.preview.alt = captionText;
     refs.caption.textContent = captionText;
     refs.caption.hidden = captionText === "";
-    refs.overlay.hidden = false;
+    showLightboxDialog(refs.overlay);
     refs.overlay.setAttribute("aria-hidden", "false");
     refs.overlay.classList.add("is-loading");
     refs.overlay.classList.remove("has-error");
@@ -796,6 +826,15 @@
       event.preventDefault();
       openLightbox(image);
     });
+
+    document.addEventListener("cancel", function (event) {
+      if (!lightbox || event.target !== lightbox.overlay) {
+        return;
+      }
+
+      event.preventDefault();
+      closeLightbox();
+    }, true);
 
     document.addEventListener("load", function (event) {
       if (lightbox && event.target === lightbox.preview) {

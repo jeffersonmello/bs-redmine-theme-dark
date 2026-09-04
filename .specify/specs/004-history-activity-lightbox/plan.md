@@ -16,6 +16,9 @@
    `/attachments/:id` and `/attachments/thumbnail/:id` paths.
 7. Add dependency-free DOM tests, validator contracts, documentation, and live
    smoke checks against the official `redmine:5.1.4` container.
+8. Open a native `<dialog>` with `showModal()` when supported so the viewer uses
+   the browser top layer; retain the strongly scoped fixed-position CSS as the
+   fallback for older engines.
 
 ## Files and ownership
 
@@ -38,4 +41,5 @@
 - **Dynamic duplication:** create one modal by stable ID and mark enhanced
   images/links idempotently.
 - **Mobile overflow:** constrain the dialog and image to the visual viewport.
-
+- **Instance cascade or stale presentation:** use the browser top layer plus a
+  high-specificity fixed fallback, and expose the hand pointer on triggers.

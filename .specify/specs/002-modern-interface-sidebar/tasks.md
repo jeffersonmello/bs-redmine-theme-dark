@@ -11,6 +11,7 @@
 - [x] Add the modern design-system stylesheet and preserve cascade ownership.
 - [x] Implement the accessible persistent sidebar toggle.
 - [x] Correct plugin/custom styles that conflict with the refreshed palette.
+- [x] Separate JSToolbar buttons from issue description and preview borders.
 - [x] Extend static validation for the new runtime contract.
 - [x] Update README, architecture, compatibility, and contributor guidance.
 

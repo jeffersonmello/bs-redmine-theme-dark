@@ -719,8 +719,9 @@ body.theme-lightbox-open {
   overflow: hidden;
 }
 
-#content .theme-lightbox-trigger {
-  cursor: zoom-in;
+#content .theme-lightbox-trigger,
+#content .theme-lightbox-trigger-link {
+  cursor: pointer !important;
 }
 
 #content img.theme-lightbox-trigger[role="button"] {
@@ -734,20 +735,34 @@ body.theme-lightbox-open {
   box-shadow: var(--theme-ring);
 }
 
-.theme-lightbox {
-  position: fixed;
-  z-index: 11000;
-  inset: 0;
+#theme-image-lightbox.theme-lightbox {
+  position: fixed !important;
+  z-index: 2147483000 !important;
+  inset: 0 !important;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
   padding: clamp(0.75rem, 3vw, 2.5rem);
   box-sizing: border-box;
+  overflow: hidden;
+  color: inherit;
   background: rgba(3, 7, 12, 0.88);
+  border: 0;
   backdrop-filter: blur(10px);
 }
 
-.theme-lightbox[hidden] {
+#theme-image-lightbox.theme-lightbox::backdrop {
+  background: rgba(3, 7, 12, 0.74);
+  backdrop-filter: blur(10px);
+}
+
+#theme-image-lightbox.theme-lightbox[hidden] {
   display: none !important;
 }
 
@@ -1110,8 +1125,12 @@ button:not([type="submit"]):not(#theme-sidebar-toggle):hover {
   background-color: #d9cbb6 !important;
 }
 
+#content .jstBlock > .jstTabs.tabs {
+  margin-bottom: 0.75rem;
+}
+
 #content .jstBlock > .jstEditor {
-  padding-top: 0.5rem;
+  padding-top: 0;
 }
 
 /* Forms: native controls, clear focus and consistent density */

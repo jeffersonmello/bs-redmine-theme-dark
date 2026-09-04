@@ -14,6 +14,8 @@
    the button to viewports of at least 900 px.
 6. Extend the Ruby validator with import-order and JavaScript/sidebar contract
    checks, then exercise the result in the official container and browser.
+7. Override Redmine 5.1.4's negative JSToolbar tab margin on the exact direct
+   child selector so toolbar controls clear the editor and preview focus border.
 
 ## Files and ownership
 
@@ -34,4 +36,5 @@
 - **Inaccessible icon-only control:** keep a real button with visible chevron,
   screen-reader text, focus ring, title, and `aria-expanded`.
 - **Storage restrictions:** catch local-storage reads and writes.
-
+- **Editor toolbar collision:** replace the core negative tab margin with
+  theme spacing without changing JSToolbar markup or behavior.

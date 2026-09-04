@@ -126,9 +126,11 @@ Redmine 5.1.4 history regression test.
 
 The third isolated `theme.js` module enhances eligible content images after the
 page loads and through a guarded `MutationObserver`. Plain primary clicks open
-one lazily created `role="dialog"` element; modified clicks retain native link
-navigation. Bare images receive keyboard button semantics, while linked images
-reuse their existing focusable anchor.
+one lazily created native `<dialog>` with `showModal()`, placing the preview in
+the browser top layer; strongly scoped fixed-position CSS remains the fallback
+when that API is unavailable. Modified clicks retain native link navigation.
+Bare images receive keyboard button semantics, linked images reuse their
+existing focusable anchor, and every eligible trigger exposes the hand pointer.
 
 For same-origin Redmine paths, `/attachments/:id` and
 `/attachments/thumbnail/:id/...` resolve to `/attachments/download/:id`, which

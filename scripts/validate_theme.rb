@@ -55,9 +55,12 @@ if modern_css.file?
     "visible keyboard focus" => ":focus-visible",
     "responsive sidebar boundary" => "max-width: 899px",
     "customer autocomplete presentation" => ".tm-clientes-autocomplete",
+    "JSToolbar editor border clearance" => ".jstBlock > .jstTabs.tabs",
     "Redmine 5.1.4 journal avatar layout" => "body.avatars-on #history .journal",
     "dark activity day headings" => "div#activity h3",
     "attachment image lightbox presentation" => ".theme-lightbox",
+    "lightbox fixed viewport fallback" => "#theme-image-lightbox.theme-lightbox",
+    "lightbox hand pointer" => "cursor: pointer",
     "local issue timer presentation" => ".theme-issue-timer"
   }.each do |contract, snippet|
     errors << "modern.css is missing #{contract}: #{snippet}" unless contents.include?(snippet)
@@ -77,6 +80,7 @@ if theme_js.file?
     "customer combobox semantics" => "aria-autocomplete",
     "image lightbox dialog" => "theme-image-lightbox",
     "image lightbox modal semantics" => "aria-modal",
+    "image lightbox native top layer" => "showModal",
     "Redmine attachment source resolution" => "/attachments",
     "per-user issue timer storage" => "issue-timers.v1.user-",
     "native log-time permission gate" => ".icon-time-add",
