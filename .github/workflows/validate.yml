@@ -1,0 +1,27 @@
+name: Validate theme
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+
+      - name: Validate theme structure and assets
+        run: ruby scripts/validate_theme.rb
+
+      - name: Validate CSS syntax and values
+        run: npx --yes csstree-validator@4.0.1 stylesheets
+

@@ -1,0 +1,9 @@
+interface:
+  display_name: "Redmine Theme Development"
+  short_description: "Maintain the Redmine 5.1.4 dark theme"
+  brand_color: "#009EDD"
+  default_prompt: "Use $redmine-theme-development to implement and validate a Redmine 5.1.4 theme change."
+
+policy:
+  allow_implicit_invocation: true
+

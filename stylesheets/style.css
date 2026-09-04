@@ -173,13 +173,13 @@ a:hover {
 #project-jump .drdn-trigger {
   height: 35px;
   padding: 7px 18px 7px 6px;
-  background: #2a3038 url(../images/sort_desc.png) no-repeat 97% 50%;
+  background: #2a3038 url(../../../images/arrow_down.png) no-repeat 97% 50%;
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #eee;
 }
 
-#project-jump.expanded .drdn-trigger {
-  content: "\sort_asc";
+#project-jump .drdn.expanded .drdn-trigger {
+  background-image: url(../../../images/arrow_up.png);
 }
 
 .drdn-content {
@@ -360,10 +360,10 @@ a:hover {
   column-width: auto;
   -webkit-column-count: auto;
   -webkit-column-width: auto;
-  -webkit-column-gap: auto;
+  -webkit-column-gap: normal;
   -moz-column-count: auto;
   -moz-column-width: auto;
-  -moz-column-gap: auto;
+  -moz-column-gap: normal;
 }
 
 @media only screen and (min-width: 720px) {
@@ -730,7 +730,7 @@ input[type="radio"]:checked:after {
 }
 
 input.autocomplete {
-  background: #2a3038 url(../images/magnifier.png) no-repeat 5px 50%;
+  background: #2a3038 url(../../../images/magnifier.png) no-repeat 5px 50%;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding-left: 30px !important;
   border-radius: 4px;
@@ -912,10 +912,6 @@ div.issue .description>p>strong, div.issue #issue_tree>p>strong, div.issue #rela
 #context-menu li:hover {
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-#context-menu a.icon-checked {
-  background: url(../images/toggle_check.png) no-repeat 3px 40% !important;
 }
 
 #context-menu a:hover {
@@ -1796,15 +1792,14 @@ button.tab-left.disabled::before, button.tab-right.disabled::before {
 
 @media screen and (max-width: 899px) {
   #header {
-    background-color: #191c20 !important;
-    background: #191c20 url(../images/icon.png) no-repeat top 10px right 70px;
+    background: #191c20;
   }
 
-  #project-jump.expanded .drdn-trigger {
+  #project-jump .drdn.expanded .drdn-trigger {
     background-image: none;
   }
 
-  #project-jump.expanded .drdn-trigger:before {
+  #project-jump .drdn.expanded .drdn-trigger:before {
     padding-top: 13px !important;
   }
 
