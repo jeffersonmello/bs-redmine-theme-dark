@@ -17,6 +17,12 @@ applyTo: "stylesheets/**/*.css"
   design tokens with new hard-coded palette values.
 - Keep the `tm-clientes-*` autocomplete presentation in `modern.css`; the
   JavaScript must not carry inline theme colors.
+- Keep `#history`, `#activity`, and `.theme-lightbox` presentation in
+  `modern.css`. Scope journal note selectors to the exact 5.1.4 `.note`
+  children so contextual controls do not inherit comment-card styles.
+- Keep `.theme-issue-timer` presentation in `modern.css`, retain a visible
+  distinction between start, running, focus, and storage-error states, and
+  verify duplicated contextual menus plus the layout below 899 px.
 - Avoid adding `!important` unless overriding Redmine or plugin specificity
   requires it. Do not mechanically remove existing uses without visual tests.
 - Check foreground/background contrast, focus visibility, hover states, table

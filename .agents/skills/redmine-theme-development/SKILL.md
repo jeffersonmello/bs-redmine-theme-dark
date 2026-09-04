@@ -24,11 +24,21 @@ Maintain a static, CSS-first theme that remains installable as
   `plugins.css`, and narrow late overrides in `custom.css`.
 - Preserve the accessible desktop sidebar toggle in `javascripts/theme.js`.
   Preserve the isolated custom-field 4 customer autocomplete in that entrypoint.
-  Keep presentation in CSS and JavaScript dependency-free.
+  Preserve the isolated accessible image lightbox, same-origin Redmine
+  attachment resolution, avatar exclusions, and native modified-click behavior.
+  Preserve the isolated local issue timer, using Redmine's rendered log-time
+  action as its permission gate and the native time-entry form as its submission
+  boundary. Keep presentation in CSS and JavaScript dependency-free.
 - Use core 5.1.4 evidence for core asset names and selectors. Do not infer from
   newer Redmine releases.
 - Preserve third-party font provenance and avoid editing binary font files.
 - Treat numeric workflow status and priority classes as instance-specific.
+- For issue history and activity, verify the exact Redmine 5.1.4 journal and
+  `dt`/`dd` activity markup. Keep avatars within a bounded column and keep the
+  lightbox out of avatar, emoji, toolbar, and user-link images.
+- For local timer work, preserve user/issue namespacing, epoch-based elapsed
+  time, independent timers, same-origin routes, storage failure handling, and
+  review in Redmine's native time-entry form.
 
 ## Verification
 

@@ -320,11 +320,12 @@ test("initializes a dynamically inserted Redmine custom field once", () => {
   const { document, observerInstances } = createEnvironment({ withSelect: false });
 
   assert.equal(document.getElementById("tm-clientes-autocomplete"), null);
-  assert.equal(observerInstances.length, 1);
+  assert.ok(observerInstances.length >= 1);
 
   const select = addCustomerSelect(document);
-  observerInstances[0].callback();
-  observerInstances[0].callback();
+  const mutation = [{ addedNodes: [select.parentNode] }];
+  observerInstances.forEach((observer) => observer.callback(mutation));
+  observerInstances.forEach((observer) => observer.callback(mutation));
 
   assert.equal(select.getAttribute("data-theme-customer-autocomplete"), "true");
   assert.equal(document.body.querySelectorAll(".tm-clientes-autocomplete").length, 1);

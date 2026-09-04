@@ -27,7 +27,12 @@ manager required by the theme at runtime.
   imported by default.
 - Keep the accessible, persistent sidebar behavior in `javascripts/theme.js`.
   Keep the custom-field 4 customer autocomplete isolated in the same entrypoint.
-  Prefer CSS for presentation and keep JavaScript dependency-free.
+  Keep the content-image lightbox isolated from both modules, same-origin for
+  Redmine attachment resolution, and non-invasive for modified clicks. Keep the
+  issue timer isolated too: initialize from the native authorized log-time
+  link, namespace browser-local state by user and issue, and finish only by
+  opening Redmine's native time-entry form. Prefer CSS for presentation and keep
+  JavaScript dependency-free.
 - Preserve bundled Font Awesome files and their notice. Do not change or
   regenerate third-party binaries without updating `THIRD_PARTY_NOTICES.md`.
 
@@ -43,6 +48,15 @@ manager required by the theme at runtime.
 - Do not claim a plugin is compatible merely because a selector exists. Plugin
   compatibility needs a versioned visual smoke test.
 - Do not silently remove the Roboto fallback or Font Awesome icon font.
+- Preserve the Redmine 5.1.4 history contract (`#history .journal`,
+  `.note-header`, `.details`) and activity definition-list contract
+  (`#activity dt` followed by `dd`). Do not repair these views with markup
+  assumptions from newer Redmine versions.
+- Never make the lightbox bypass Redmine attachment authorization. Exclude
+  gravatars, emoji, editor controls, user links, and non-image attachments.
+- Never let the timer invent permission, auto-submit time, or replace the
+  `.icon-time-add` action. Preserve independent issue timers and the native
+  `/issues/:id/time_entries/new` handoff with user review.
 
 ## Validation
 

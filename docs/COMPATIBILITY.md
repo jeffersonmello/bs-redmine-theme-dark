@@ -34,9 +34,10 @@ docker run --rm \
 
 These checks validate structure, import order, CSS URL resolution, permitted
 core assets, bundled Font Awesome glyphs, balanced CSS blocks, exact Redmine
-version metadata, the sidebar and customer-autocomplete runtime contracts, CSS
-grammar/values, JavaScript syntax, and dependency-free behavior tests. They do
-not prove visual correctness.
+version metadata, the sidebar, customer-autocomplete, history/activity,
+lightbox, and local issue-timer runtime contracts, CSS grammar/values,
+JavaScript syntax, and dependency-free behavior tests. They do not prove visual
+correctness.
 
 ## Recorded baseline smoke test
 
@@ -62,6 +63,26 @@ produced the expected localized combobox and dark presentation; dependency-free
 tests cover selection, `change` dispatch, keyboard removal, normalized search,
 and dynamic insertion.
 
+The history/activity/lightbox baseline used an actual issue with two journals,
+Gravatar-style avatars, property changes, and an attached PNG in the official
+container. History avatars remained clear of headers and centered on the
+timeline; activity date headings and event separators stayed dark at 1280 px
+and 800 px. Opening the attachment produced one localized modal, displayed the
+full image, moved focus to its close button, and Escape returned focus to the
+original attachment link. Dependency-free tests additionally cover exact
+`/attachments/download/:id` resolution, backdrop and button close, modified
+clicks, exclusions, keyboard opening, and dynamic insertion.
+
+The local-timer baseline used two actual issues and the administrator's native
+log-time permission in the official container. Both top and bottom actions
+stayed synchronized, elapsed time survived reload and issue navigation, and
+finishing one timer preserved the other. The native nested time-entry form
+opened with `time_entry[hours]=0.02` for a sub-minute run, displayed `0:01`, and
+kept activity and submission under user control. The running state wrapped
+without horizontal overflow at 800 px and 600 px. Dependency-free tests cover
+longer decimal conversion, storage failure, storage events, dynamic insertion,
+and independent records.
+
 ## Manual core-page matrix
 
 For any visual release, test both a desktop viewport and a viewport below
@@ -73,6 +94,9 @@ For any visual release, test both a desktop viewport and a viewport below
 | Home and projects | Cards, nested projects, top menu, project switcher. |
 | Issue list | Filters, options, table, selection, pagination, context menu, progress. |
 | Issue detail and edit | Attributes, status, priority, history, attachments, relations, forms. |
+| Issue timer and time entry | Authorized start action, synchronized duplicated menus, reload persistence, finish navigation, prefilled hours, and retained native action. |
+| Issue comments/history | Circular avatars, timeline clearance, headers, changes, notes, thumbnails, avatar-disabled mode. |
+| Activity | Dark day headings and aligned icon/avatar/title/description/author event pairs. |
 | Wiki | Headings, tables, preview, preformatted code, syntax highlighting. |
 | Repository | Browser, file content, line numbers, diff additions/removals. |
 | Calendar and Gantt | Grid contrast, today/non-working days, issue markers, zoom controls. |
@@ -104,6 +128,42 @@ For any visual release, test both a desktop viewport and a viewport below
 The ID `4` is installation-specific and does not imply that other Redmine
 instances use the same customer field. Map and smoke-test the target instance
 before changing it.
+
+## Image lightbox contract
+
+| Condition | Expected behavior |
+| --- | --- |
+| Plain click on an eligible wiki/content image | One modal dialog opens without leaving the current page. |
+| Redmine attachment or thumbnail URL | Preview uses the same-origin `/attachments/download/:id` route. |
+| Escape, close button, or backdrop | Dialog closes, body scrolling returns, and focus returns to the trigger. |
+| Keyboard on a bare eligible image | Enter or Space opens the dialog. |
+| Ctrl/Cmd/Shift/Alt click | Browser-native link behavior remains available. |
+| Avatar, emoji, editor control, or user avatar link | Image is not enhanced or intercepted. |
+| Content inserted dynamically | Eligible images are enhanced once; one modal element is reused. |
+| JavaScript unavailable or image load fails | Native links remain available; the dialog falls back to the rendered source and reports a localized error if needed. |
+
+The viewer supports raster and SVG image content only. PDFs, video, audio,
+gallery navigation, and conversion of raw Textile/Markdown snippets in activity
+summaries are outside the theme's presentation-only scope.
+
+## Local issue timer contract
+
+| Condition | Expected behavior |
+| --- | --- |
+| Redmine renders `.icon-time-add` for the issue | An accessible timer control is inserted beside the unchanged native action. |
+| User lacks `log_time` permission or page has no issue time-entry action | No timer control is created. |
+| Timer starts | A timestamp is stored under the current user and issue; every duplicated menu reports the running state. |
+| Page reload, tab visibility change, storage event, or device sleep | Elapsed `HH:MM:SS` is reconstructed from the stored epoch timestamp. |
+| Another issue starts or finishes | Existing timers for other issue IDs remain unchanged. |
+| Timer finishes | Only the current issue timer is removed and the native `/issues/:id/time_entries/new` form opens. |
+| Elapsed duration is below one minute | The native form receives the one-minute minimum as decimal hours. |
+| Local storage is missing or a write fails | No permission is bypassed; the original Redmine log-time action remains usable. |
+| JavaScript is unavailable | Redmine's native issue actions and time-entry flow are unchanged. |
+
+The timer is a browser-local convenience, not a timesheet database. It does not
+sync across browsers or devices, choose an activity, write comments, submit a
+time entry, detect idle time, or reconcile simultaneous edits to the same issue
+from multiple tabs.
 
 ## Plugin coverage
 

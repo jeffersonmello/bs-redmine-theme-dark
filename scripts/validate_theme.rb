@@ -14,6 +14,8 @@ REQUIRED_FILES = %w[
   javascripts/theme.js
   tests/theme_sidebar_test.js
   tests/theme_customer_autocomplete_test.js
+  tests/theme_lightbox_test.js
+  tests/theme_issue_timer_test.js
   webfonts/fa-solid-900.eot
   webfonts/fa-solid-900.svg
   webfonts/fa-solid-900.ttf
@@ -52,7 +54,11 @@ if modern_css.file?
     "desktop sidebar collapse rule" => "body.theme-sidebar-collapsed #sidebar",
     "visible keyboard focus" => ":focus-visible",
     "responsive sidebar boundary" => "max-width: 899px",
-    "customer autocomplete presentation" => ".tm-clientes-autocomplete"
+    "customer autocomplete presentation" => ".tm-clientes-autocomplete",
+    "Redmine 5.1.4 journal avatar layout" => "body.avatars-on #history .journal",
+    "dark activity day headings" => "div#activity h3",
+    "attachment image lightbox presentation" => ".theme-lightbox",
+    "local issue timer presentation" => ".theme-issue-timer"
   }.each do |contract, snippet|
     errors << "modern.css is missing #{contract}: #{snippet}" unless contents.include?(snippet)
   end
@@ -68,7 +74,14 @@ if theme_js.file?
     "desktop viewport boundary" => "min-width: 900px",
     "pages without a sidebar guard" => "nosidebar",
     "customer custom-field target" => "issue_custom_field_values_4",
-    "customer combobox semantics" => "aria-autocomplete"
+    "customer combobox semantics" => "aria-autocomplete",
+    "image lightbox dialog" => "theme-image-lightbox",
+    "image lightbox modal semantics" => "aria-modal",
+    "Redmine attachment source resolution" => "/attachments",
+    "per-user issue timer storage" => "issue-timers.v1.user-",
+    "native log-time permission gate" => ".icon-time-add",
+    "native time-entry hours prefill" => "time_entry[hours]",
+    "accessible timer state" => "aria-pressed"
   }.each do |contract, snippet|
     errors << "theme.js is missing #{contract}: #{snippet}" unless contents.include?(snippet)
   end

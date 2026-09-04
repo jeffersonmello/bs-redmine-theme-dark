@@ -14,5 +14,12 @@ plugin, and local overrides. Verify theme-local asset references, bundled font
 glyphs, the accessible sidebar state, CSS/JavaScript syntax, and documentation.
 Preserve the native select and keyboard/ARIA behavior when changing the
 instance-specific customer autocomplete for custom field 4.
+For history and activity work, verify Redmine 5.1.4 journal avatars, notes, and
+adjacent activity event pairs at desktop and narrow widths. Preserve the
+lightbox's same-origin attachment resolution, exclusions, modal semantics,
+modified-click fallback, and focus restoration.
+For local timer changes, preserve the native log-time permission gate,
+user/issue storage namespacing, epoch-based elapsed time, duplicated-menu state,
+independent issue records, and user-reviewed native time-entry handoff.
 Run the repository validation commands and report any visual checks that still
 require a live Redmine instance.

@@ -23,6 +23,12 @@ flowchart LR
     B --> M
     J --> U[custom field 4<br/>customer autocomplete]
     U --> M
+    J --> L[eligible content images<br/>attachment URL resolver]
+    L --> D[accessible lightbox dialog]
+    D --> M
+    J --> T[authorized issue action<br/>local timer state]
+    T --> N[native Redmine<br/>time-entry form]
+    T --> M
 ```
 
 The order is behavioral: later stylesheets can intentionally correct earlier
@@ -40,7 +46,8 @@ specificity without duplicating the Redmine core stylesheet.
 | `stylesheets/plugins/redmine_wysiwyg_editor.css` | Legacy TinyMCE/WYSIWYG integration; present but not imported by default. |
 | `images/` | Time-tracking icons and a WYSIWYG modal texture owned by the theme. |
 | `webfonts/` | Font Awesome 5.15.2 solid font in browser-compatible formats. |
-| `javascripts/theme.js` | Isolated progressive enhancements for the accessible sidebar toggle and the instance-specific customer autocomplete. |
+| `javascripts/theme.js` | Isolated progressive enhancements for the accessible sidebar toggle, instance-specific customer autocomplete, content-image lightbox, and per-issue local timer. |
+| `tests/` | Dependency-free behavior tests for sidebar, customer autocomplete, lightbox eligibility/accessibility, and timer persistence/native-form handoff. |
 | `screenshot.png` | Historical design reference. |
 | `scripts/validate_theme.rb` | Offline structure, path, glyph, and version-aware validation. |
 
@@ -67,9 +74,9 @@ normalizes those domains through semantic design tokens and focused overrides:
 - Theme images use paths relative to the theme stylesheet. A small set of core
   Redmine images uses `../../../images/`, which resolves from an installed theme
   back to `public/images/`.
-- Sidebar and customer-autocomplete behavior use small dependency-free modules.
-  No Sass, bundler, Node runtime, or compiled artifact is required in
-  production.
+- Sidebar, customer-autocomplete, lightbox, and issue-timer behavior use small
+  dependency-free modules. No Sass, bundler, Node runtime, or compiled artifact
+  is required in production.
 
 ## Sidebar behavior
 
@@ -102,6 +109,59 @@ matched case- and accent-insensitively, up to 80 visible results. A guarded
 duplicate controls. All presentation remains in `modern.css`; when JavaScript
 does not run, Redmine's original select remains visible and functional.
 
+## History and activity presentation
+
+Redmine 5.1.4 positions journal avatars with negative margins and gives activity
+date headings a light background. `modern.css` replaces those assumptions with
+bounded avatar columns, a theme-owned journal timeline, scoped note cards, and
+paired activity `dt`/`dd` rows. The selectors retain Redmine's original markup,
+event-type classes, journal anchors, and avatar-enabled/disabled body classes.
+
+The narrow `> .note > .contextual` and `> .note > .wiki` rules are deliberate:
+the legacy selector `#history .journal.has-notes > div > div` otherwise styles
+both controls as comment cards. Avoid broadening these overrides without a
+Redmine 5.1.4 history regression test.
+
+## Image lightbox behavior
+
+The third isolated `theme.js` module enhances eligible content images after the
+page loads and through a guarded `MutationObserver`. Plain primary clicks open
+one lazily created `role="dialog"` element; modified clicks retain native link
+navigation. Bare images receive keyboard button semantics, while linked images
+reuse their existing focusable anchor.
+
+For same-origin Redmine paths, `/attachments/:id` and
+`/attachments/thumbnail/:id/...` resolve to `/attachments/download/:id`, which
+loads the original file through the user's existing Redmine authorization.
+An ordinary link that points directly to an image is preferred next; otherwise
+the rendered image source is retained. Avatars, emoji, user links,
+editor-toolbar images, and non-image attachments are excluded. On close, body
+scroll is restored and focus returns to the original trigger. Without JavaScript,
+images and attachment links keep Redmine's native behavior.
+
+## Local issue timer behavior
+
+The fourth isolated `theme.js` module initializes only from Redmine 5.1.4's
+same-origin `#content > .contextual > a.icon-time-add` action. Redmine renders
+that link only when the current user may log time, so the theme does not invent
+an authorization path or remove the original action. Top and bottom copies of
+the issue action menu receive controls backed by the same issue record.
+
+Active timers are stored as epoch start timestamps in one versioned
+`localStorage` object, namespaced with the current user ID when it can be read
+from `#loggedas`. Each issue ID is a separate key, so starting or finishing one
+issue preserves every other active timer. Elapsed `HH:MM:SS` is recomputed from
+`Date.now()` on each render, after reload, visibility changes, storage events,
+and dynamic action-menu insertion; browser sleep does not depend on counting
+interval callbacks.
+
+Finishing removes only the current issue record and navigates to the native
+`/issues/:id/time_entries/new` URL with `time_entry[hours]` and `back_url` query
+parameters. Hours use nearest-minute rounding with a one-minute minimum.
+Redmine still owns the issue, date, activity, comments, permissions, validation,
+and final submission. Storage reads and writes are guarded; failure never
+removes the native log-time link.
+
 ## Plugin boundary
 
 Rules in `plugins.css` currently address Mega Calendar-style events, CMS, CRM,
@@ -127,3 +187,14 @@ visual test of the installed plugin version.
 - The customer autocomplete is intentionally instance-specific and depends on
   the Redmine custom-field ID `issue_custom_field_values_4`. Other installations
   must map and test their own field ID before changing this selector.
+- Journal and activity overrides depend on the Redmine 5.1.4 `#history`,
+  `.journal`, `.note-header`, `#activity`, and adjacent `dt`/`dd` contracts.
+- The lightbox URL resolver depends on Redmine 5.1.4 attachment, thumbnail, and
+  download routes. It must remain same-origin and must never bypass attachment
+  authorization.
+- The issue timer depends on Redmine 5.1.4's `.icon-time-add` link and nested
+  `/issues/:id/time_entries/new` route. Keep it same-origin, use the rendered
+  link as the permission gate, and never auto-submit a time entry.
+- Timer persistence is browser-local. It is not a reliable server record and
+  can be lost when site data is cleared; the native form is the only submission
+  boundary.

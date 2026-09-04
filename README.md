@@ -2,6 +2,7 @@
 
 [![Redmine 5.1.4](https://img.shields.io/badge/Redmine-5.1.4.stable-B32024?logo=redmine&logoColor=white)](https://www.redmine.org/news/146)
 [![CSS3](https://img.shields.io/badge/CSS3-static_theme-1572B6?logo=css3&logoColor=white)](stylesheets/style.css)
+[![Vanilla JavaScript](https://img.shields.io/badge/JavaScript-no_dependencies-F7DF1E?logo=javascript&logoColor=111827)](javascripts/theme.js)
 [![Font Awesome 5.15.2](https://img.shields.io/badge/Font_Awesome-5.15.2-528DD7?logo=fontawesome&logoColor=white)](THIRD_PARTY_NOTICES.md)
 [![Validate theme](https://github.com/jeffersonmello/bs-redmine-theme-dark/actions/workflows/validate.yml/badge.svg)](https://github.com/jeffersonmello/bs-redmine-theme-dark/actions/workflows/validate.yml)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
@@ -22,6 +23,12 @@ calendars, and administration screens.
   radii, shadows, and interaction states.
 - Collapsible desktop sidebar with an accessible toggle and a locally persisted
   preference.
+- Per-issue local timers that survive navigation and finish in Redmine's native
+  time-entry form with elapsed hours prefilled.
+- Repaired issue history and activity cards with aligned circular avatars,
+  dark date headings, and compact event timelines.
+- Accessible in-page lightbox for wiki and attachment images, including original
+  Redmine attachment resolution, Escape/backdrop close, and focus restoration.
 - Searchable customer chips for the instance-specific custom field 4, with
   keyboard navigation and no server-side dependency.
 - Responsive Redmine flyout behavior below 899 px.
@@ -80,10 +87,11 @@ Redmine 5.1.4 core CSS
   → custom.css      narrow, last-loaded fixes
 ```
 
-`javascripts/theme.js` progressively adds the desktop sidebar control and the
-customer autocomplete described below. The theme remains usable when
-JavaScript or local storage is unavailable; in that case native Redmine form
-controls and the visible sidebar remain available. See
+`javascripts/theme.js` progressively adds the desktop sidebar control, local
+issue timer, customer autocomplete, and content-image lightbox described below.
+The theme remains usable when JavaScript or local storage is unavailable; in
+that case native Redmine form controls, time-entry actions, attachment links,
+and the visible sidebar remain available. See
 [Theme architecture](docs/ARCHITECTURE.md) for the full file and dependency map.
 
 ## Sidebar control
@@ -92,6 +100,27 @@ On pages that contain a sidebar, use the chevron button on its left edge to
 hide or restore it. The choice is stored only in the current browser and is
 reapplied on later pages. The control is intentionally absent on pages without
 a sidebar and below 900 px, where Redmine's native flyout menu owns navigation.
+
+## Local issue timer
+
+On an issue where Redmine shows the authorized **Log time** action, the theme
+adds **Start timer** beside it. Starting stores the timestamp in this browser;
+the same issue continues counting after navigation, reload, tab changes, or
+device sleep. Separate issues can run at the same time, and duplicated action
+menus on the issue page show the same state.
+
+Choose **Finish timer** to remove only that issue's local timer and open
+Redmine 5.1.4's native time-entry form. The elapsed duration is rounded to the
+nearest minute (minimum one minute) and prefilled as decimal hours. Review the
+date, activity, comment, and hours before submitting; Redmine remains
+responsible for permissions and validation.
+
+Timer data is local to the current browser origin and namespaced by the signed-in
+Redmine user when the user ID is available. It is not sent to a theme service,
+synchronized across devices, or submitted automatically. Clearing site data or
+using another browser loses active timers. If local storage is unavailable, the
+timer is omitted or reports an error while the native **Log time** link remains
+usable.
 
 ## Customer autocomplete
 
@@ -105,6 +134,21 @@ Backspace. It is initialized only after the target field exists and can also
 handle forms inserted dynamically. This field ID is installation-specific: if
 the customer field has another ID, update `SELECT_ID` in
 `javascripts/theme.js` and test the issue create/edit forms before deployment.
+
+## Image lightbox
+
+A plain click on an eligible image inside issue descriptions, comments, wikis,
+attachment thumbnails, or the activity feed opens a full-viewport preview.
+Redmine 5.1.4 thumbnail and attachment-page URLs are resolved to the authorized
+`/attachments/download/:id` image; no permission checks are bypassed and no
+third-party viewer is loaded.
+
+Use the close button, Escape, or the backdrop to dismiss the preview. Keyboard
+focus moves into the dialog and returns to the triggering image or link after
+close. Ctrl/Cmd/Shift/Alt clicks keep the browser's native link behavior.
+Avatars, emoji, toolbar icons, PDFs, video, audio, and other non-image files are
+not intercepted. If JavaScript is disabled, the original attachment link works
+normally.
 
 ## Customization
 
@@ -171,6 +215,12 @@ The documented baseline includes a live login smoke test using the official
 - [AGENTS.md](AGENTS.md) — repository instructions for coding agents.
 - [SpecDrive baseline](.specify/specs/001-redmine-5-1-4-compatibility/spec.md) —
   scope, acceptance criteria, plan, and tasks for the 5.1.4 baseline.
+- [History, activity, and lightbox spec](.specify/specs/004-history-activity-lightbox/spec.md)
+  — current behavior and acceptance criteria for comments, activity, avatars,
+  and image preview.
+- [Local issue timer spec](.specify/specs/005-local-issue-timer/spec.md) — local
+  persistence, permission boundary, native time-entry handoff, and acceptance
+  criteria.
 
 ## License and credits
 
