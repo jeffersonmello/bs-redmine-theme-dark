@@ -1131,6 +1131,7 @@ button:not([type="submit"]):not(#theme-sidebar-toggle):hover {
 
 #content .jstBlock > .jstEditor {
   padding-top: 0;
+  margin-top: 15px !important;
 }
 
 /* Forms: native controls, clear focus and consistent density */
