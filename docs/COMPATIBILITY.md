@@ -137,6 +137,13 @@ before changing it.
 | Instance CSS changes the normal document cascade | Native `showModal()` keeps the viewer in the browser top layer; fixed full-viewport CSS remains the fallback. |
 | Pointer moves over an eligible image | The hand pointer indicates that the image is interactive. |
 | Redmine attachment or thumbnail URL | Preview uses the same-origin `/attachments/download/:id` route. |
+| Image finishes loading | Image fits the viewport without enlarging a small original; zoom starts at 100% of the fitted size. |
+| Zoom buttons or unmodified `+`/`-` shortcuts | Zoom changes in 25-point steps between 100% and 400% of the fitted size; the displayed percentage and button availability stay synchronized. |
+| Fit button or unmodified `0` shortcut | Fitted size and scroll position are restored. |
+| Wheel over the image viewport | Plain wheel input zooms; Ctrl/Cmd/Alt/Shift wheel input retains native browser behavior. |
+| Enlarged image | Mouse drag, native touch scrolling, and arrow keys in the focused viewport reach overflow content while the toolbar remains visible. |
+| Keyboard Tab and Shift+Tab | Enabled toolbar controls and the image viewport are reachable inside the modal focus cycle. |
+| Loading, fallback, error, close/reopen, or resize | Previous zoom and pan are cleared; unloaded or failed images cannot be zoomed. |
 | Escape, close button, or backdrop | Dialog closes, body scrolling returns, and focus returns to the trigger. |
 | Keyboard on a bare eligible image | Enter or Space opens the dialog. |
 | Ctrl/Cmd/Shift/Alt click | Browser-native link behavior remains available. |
@@ -147,6 +154,24 @@ before changing it.
 The viewer supports raster and SVG image content only. PDFs, video, audio,
 gallery navigation, and conversion of raw Textile/Markdown snippets in activity
 summaries are outside the theme's presentation-only scope.
+
+On 2026-09-05, the zoom extension passed the Ruby validator, CSS Tree 4.0.1,
+JavaScript syntax checks, all 25 behavior tests, and the exact-release validator
+in the official `redmine:5.1.4` image. Seven zoom tests cover fitted dimensions,
+bounds, keyboard focus, modified gestures, mouse dragging, resize, and source
+fallback/error/reset behavior.
+
+A disposable container reporting `Redmine 5.1.4.stable` served an actual issue
+attachment (2400 × 1600 PNG) through the normal authorized download route.
+The Codex in-app browser was checked at 1440 × 1000 and 390 × 844. The image
+fitted the viewport, zoom buttons and wheel enlarged it, mouse dragging changed
+scroll position, and the toolbar remained visible. Resize and `0` restored
+100%; Tab reached the image viewport, arrow keys scrolled, and Escape restored
+the attachment-link focus and body scrolling. No standalone HTML fixture was
+used. The browser engine version was not captured.
+
+Physical touch gestures, Firefox/Safari, plugin pages, and the remaining core
+page matrix were not re-tested for this zoom extension.
 
 ## Local issue timer contract
 

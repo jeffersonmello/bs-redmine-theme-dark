@@ -494,6 +494,10 @@
   var activeTrigger = null;
   var fallbackSource = "";
   var lightbox = null;
+  var zoom = 1;
+  var fitWidth = 0;
+  var fitHeight = 0;
+  var drag = null;
 
   function closest(element, selector) {
     return element && typeof element.closest === "function" ? element.closest(selector) : null;
@@ -610,11 +614,23 @@
       ? {
           title: "Visualização da imagem",
           close: "Fechar visualização",
+          zoomIn: "Ampliar imagem (+)",
+          zoomOut: "Reduzir imagem (-)",
+          zoomReset: "Ajustar à tela (0)",
+          fit: "Ajustar",
+          zoom: "Zoom relativo ao tamanho ajustado à tela",
+          viewport: "Imagem ampliável. Use + e - para zoom, 0 para ajustar e as setas para rolar.",
           error: "Não foi possível carregar a imagem em tamanho completo."
         }
       : {
           title: "Image preview",
           close: "Close preview",
+          zoomIn: "Zoom in (+)",
+          zoomOut: "Zoom out (-)",
+          zoomReset: "Fit to screen (0)",
+          fit: "Fit",
+          zoom: "Zoom relative to the fitted image size",
+          viewport: "Zoomable image. Use + and - to zoom, 0 to fit and arrow keys to scroll.",
           error: "The full-size image could not be loaded."
         };
     var overlay = document.createElement("dialog");
@@ -624,6 +640,13 @@
     var figure = document.createElement("figure");
     var preview = document.createElement("img");
     var caption = document.createElement("figcaption");
+    var toolbar = document.createElement("div");
+    var viewport = document.createElement("div");
+    var canvas = document.createElement("div");
+    var zoomOut = document.createElement("button");
+    var zoomReset = document.createElement("button");
+    var zoomIn = document.createElement("button");
+    var zoomLevel = document.createElement("span");
 
     overlay.id = LIGHTBOX_ID;
     overlay.className = "theme-lightbox";
@@ -647,9 +670,42 @@
     figure.className = "theme-lightbox__figure";
     preview.className = "theme-lightbox__image";
     caption.className = "theme-lightbox__caption";
+    toolbar.className = "theme-lightbox__toolbar";
+    toolbar.setAttribute("role", "group");
+    toolbar.setAttribute("aria-label", labels.zoom);
+    viewport.className = "theme-lightbox__viewport";
+    viewport.setAttribute("tabindex", "0");
+    viewport.setAttribute("role", "region");
+    viewport.setAttribute("aria-label", labels.viewport);
+    canvas.className = "theme-lightbox__canvas";
+    preview.setAttribute("draggable", "false");
+    zoomOut.className = "theme-lightbox__zoom-out";
+    zoomReset.className = "theme-lightbox__zoom-reset";
+    zoomIn.className = "theme-lightbox__zoom-in";
+    [zoomOut, zoomReset, zoomIn].forEach(function (button, index) {
+      var label = [labels.zoomOut, labels.zoomReset, labels.zoomIn][index];
+      button.type = "button";
+      button.title = label;
+      button.setAttribute("aria-label", label);
+    });
+    zoomOut.textContent = "−";
+    zoomReset.textContent = labels.fit;
+    zoomIn.textContent = "+";
+    zoomLevel.className = "theme-lightbox__zoom-level";
+    zoomLevel.setAttribute("role", "status");
+    zoomLevel.setAttribute("aria-live", "polite");
+    zoomLevel.setAttribute("aria-atomic", "true");
+    zoomLevel.title = labels.zoom;
 
-    figure.appendChild(preview);
+    toolbar.appendChild(zoomOut);
+    toolbar.appendChild(zoomLevel);
+    toolbar.appendChild(zoomReset);
+    toolbar.appendChild(zoomIn);
+    canvas.appendChild(preview);
+    viewport.appendChild(canvas);
+    figure.appendChild(viewport);
     figure.appendChild(caption);
+    stage.appendChild(toolbar);
     stage.appendChild(closeButton);
     stage.appendChild(figure);
     overlay.appendChild(title);
@@ -662,10 +718,122 @@
       closeButton: closeButton,
       preview: preview,
       caption: caption,
+      viewport: viewport,
+      canvas: canvas,
+      zoomOut: zoomOut,
+      zoomReset: zoomReset,
+      zoomIn: zoomIn,
+      zoomLevel: zoomLevel,
       labels: labels
     };
 
     return lightbox;
+  }
+
+  function endDrag() {
+    var previousDrag = drag;
+    drag = null;
+    if (previousDrag && typeof lightbox.viewport.releasePointerCapture === "function") {
+      try {
+        lightbox.viewport.releasePointerCapture(previousDrag.id);
+      } catch (_error) {
+        // Capture may already have ended after pointer cancellation.
+      }
+    }
+    lightbox.viewport.classList.remove("is-dragging");
+  }
+
+  function updateZoomControls() {
+    var ready = fitWidth > 0 && fitHeight > 0;
+    lightbox.zoomOut.setAttribute("aria-disabled", String(!ready || zoom <= 1));
+    lightbox.zoomReset.setAttribute("aria-disabled", String(!ready || zoom === 1));
+    lightbox.zoomIn.setAttribute("aria-disabled", String(!ready || zoom >= 4));
+    lightbox.zoomLevel.textContent = Math.round(zoom * 100) + "%";
+    lightbox.viewport.setAttribute("tabindex", ready ? "0" : "-1");
+    if (zoom > 1) {
+      lightbox.viewport.classList.add("is-zoomed");
+    } else {
+      lightbox.viewport.classList.remove("is-zoomed");
+    }
+  }
+
+  function resetZoom() {
+    endDrag();
+    zoom = 1;
+    fitWidth = 0;
+    fitHeight = 0;
+    lightbox.preview.removeAttribute("width");
+    lightbox.preview.removeAttribute("height");
+    lightbox.viewport.scrollLeft = 0;
+    lightbox.viewport.scrollTop = 0;
+    updateZoomControls();
+  }
+
+  function fitImage() {
+    resetZoom();
+    var preview = lightbox.preview;
+    var viewport = lightbox.viewport;
+    if (!preview.naturalWidth || !preview.naturalHeight ||
+        !viewport.clientWidth || !viewport.clientHeight) {
+      return;
+    }
+
+    var scale = Math.min(1, viewport.clientWidth / preview.naturalWidth,
+      viewport.clientHeight / preview.naturalHeight);
+    fitWidth = Math.max(1, Math.floor(preview.naturalWidth * scale));
+    fitHeight = Math.max(1, Math.floor(preview.naturalHeight * scale));
+    preview.setAttribute("width", fitWidth);
+    preview.setAttribute("height", fitHeight);
+    updateZoomControls();
+  }
+
+  function setZoom(nextZoom, clientX, clientY) {
+    if (!fitWidth || !fitHeight || lightbox.overlay.hidden) {
+      return;
+    }
+    nextZoom = Math.max(1, Math.min(4, nextZoom));
+    if (nextZoom === zoom) {
+      return;
+    }
+
+    var viewport = lightbox.viewport;
+    var rect = viewport.getBoundingClientRect();
+    var x = clientX === undefined ? viewport.clientWidth / 2 : clientX - rect.left;
+    var y = clientY === undefined ? viewport.clientHeight / 2 : clientY - rect.top;
+    var oldWidth = Math.round(fitWidth * zoom);
+    var oldHeight = Math.round(fitHeight * zoom);
+    var imageX = (viewport.scrollLeft + x - Math.max(0, (viewport.clientWidth - oldWidth) / 2)) / oldWidth;
+    var imageY = (viewport.scrollTop + y - Math.max(0, (viewport.clientHeight - oldHeight) / 2)) / oldHeight;
+
+    endDrag();
+    zoom = nextZoom;
+    var width = Math.round(fitWidth * zoom);
+    var height = Math.round(fitHeight * zoom);
+    lightbox.preview.setAttribute("width", width);
+    lightbox.preview.setAttribute("height", height);
+    viewport.scrollLeft = zoom === 1 ? 0 : Math.max(0, Math.min(width - viewport.clientWidth,
+      Math.max(0, Math.min(1, imageX)) * width - x));
+    viewport.scrollTop = zoom === 1 ? 0 : Math.max(0, Math.min(height - viewport.clientHeight,
+      Math.max(0, Math.min(1, imageY)) * height - y));
+    updateZoomControls();
+  }
+
+  function isImageViewport(target) {
+    return lightbox && (target === lightbox.preview || target === lightbox.canvas ||
+      target === lightbox.viewport);
+  }
+
+  function cycleLightboxFocus(backwards) {
+    var controls = [lightbox.zoomOut, lightbox.zoomReset, lightbox.zoomIn, lightbox.closeButton];
+    if (fitWidth && fitHeight) {
+      controls.push(lightbox.viewport);
+    }
+    var index = controls.indexOf(document.activeElement);
+    if (index === -1) {
+      lightbox.closeButton.focus();
+    } else {
+      controls[(index + (backwards ? -1 : 1) + controls.length) % controls.length].focus();
+    }
   }
 
   function showLightboxDialog(overlay) {
@@ -704,6 +872,7 @@
     }
 
     hideLightboxDialog(lightbox.overlay);
+    resetZoom();
     lightbox.overlay.setAttribute("aria-hidden", "true");
     lightbox.overlay.classList.remove("is-loading", "has-error");
     lightbox.preview.removeAttribute("src");
@@ -732,6 +901,7 @@
     refs.overlay.setAttribute("aria-hidden", "false");
     refs.overlay.classList.add("is-loading");
     refs.overlay.classList.remove("has-error");
+    resetZoom();
     document.body.classList.add("theme-lightbox-open");
     refs.preview.src = resolveImageSource(image);
     refs.closeButton.focus({ preventScroll: true });
@@ -793,6 +963,17 @@
         return;
       }
 
+      if (lightbox && !lightbox.overlay.hidden) {
+        if (event.target === lightbox.zoomIn) {
+          setZoom(zoom + 0.25);
+        } else if (event.target === lightbox.zoomOut) {
+          setZoom(zoom - 0.25);
+        } else if (event.target === lightbox.zoomReset) {
+          setZoom(1);
+        }
+        return;
+      }
+
       var image = findImageFromTarget(event.target);
       if (!image) {
         return;
@@ -809,7 +990,12 @@
           closeLightbox();
         } else if (event.key === "Tab") {
           event.preventDefault();
-          lightbox.closeButton.focus();
+          cycleLightboxFocus(event.shiftKey);
+        } else if (!event.defaultPrevented && !event.ctrlKey && !event.metaKey && !event.altKey) {
+          if (event.key === "+" || event.key === "=" || event.key === "-" || event.key === "0") {
+            event.preventDefault();
+            setZoom(event.key === "0" ? 1 : zoom + (event.key === "-" ? -0.25 : 0.25));
+          }
         }
         return;
       }
@@ -837,16 +1023,18 @@
     }, true);
 
     document.addEventListener("load", function (event) {
-      if (lightbox && event.target === lightbox.preview) {
+      if (lightbox && !lightbox.overlay.hidden && event.target === lightbox.preview) {
         lightbox.overlay.classList.remove("is-loading", "has-error");
+        fitImage();
       }
     }, true);
 
     document.addEventListener("error", function (event) {
-      if (!lightbox || event.target !== lightbox.preview) {
+      if (!lightbox || lightbox.overlay.hidden || event.target !== lightbox.preview) {
         return;
       }
 
+      resetZoom();
       if (fallbackSource && lightbox.preview.src !== fallbackSource) {
         lightbox.preview.src = fallbackSource;
         return;
@@ -857,6 +1045,54 @@
       lightbox.caption.hidden = false;
       lightbox.caption.textContent = lightbox.labels.error;
     }, true);
+
+    document.addEventListener("wheel", function (event) {
+      if (!isImageViewport(event.target) || lightbox.overlay.hidden || !fitWidth ||
+          event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey ||
+          event.shiftKey || !event.deltaY) {
+        return;
+      }
+      event.preventDefault();
+      setZoom(zoom + (event.deltaY < 0 ? 0.25 : -0.25), event.clientX, event.clientY);
+    }, { passive: false });
+
+    document.addEventListener("pointerdown", function (event) {
+      if (!isImageViewport(event.target) || lightbox.overlay.hidden || zoom <= 1 ||
+          event.pointerType !== "mouse" || !isPlainPrimaryClick(event)) {
+        return;
+      }
+      event.preventDefault();
+      var viewport = lightbox.viewport;
+      viewport.focus({ preventScroll: true });
+      drag = { id: event.pointerId, x: event.clientX, y: event.clientY,
+        left: viewport.scrollLeft, top: viewport.scrollTop };
+      viewport.classList.add("is-dragging");
+      if (typeof viewport.setPointerCapture === "function") {
+        viewport.setPointerCapture(event.pointerId);
+      }
+    });
+
+    document.addEventListener("pointermove", function (event) {
+      if (!drag || event.pointerId !== drag.id) {
+        return;
+      }
+      lightbox.viewport.scrollLeft = drag.left + drag.x - event.clientX;
+      lightbox.viewport.scrollTop = drag.top + drag.y - event.clientY;
+    });
+
+    ["pointerup", "pointercancel", "lostpointercapture"].forEach(function (type) {
+      document.addEventListener(type, function (event) {
+        if (drag && event.pointerId === drag.id) {
+          endDrag();
+        }
+      });
+    });
+
+    window.addEventListener("resize", function () {
+      if (lightbox && !lightbox.overlay.hidden && fitWidth) {
+        fitImage();
+      }
+    });
 
     if (typeof MutationObserver === "function") {
       var observer = new MutationObserver(function (mutations) {

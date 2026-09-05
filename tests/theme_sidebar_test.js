@@ -103,6 +103,7 @@ function loadTheme({ collapsed = false, desktop = true, noSidebar = false, stora
   const mediaListeners = [];
   const window = {
     localStorage,
+    addEventListener() {},
     matchMedia() {
       return {
         matches: desktop,

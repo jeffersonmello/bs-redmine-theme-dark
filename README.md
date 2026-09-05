@@ -30,7 +30,8 @@ calendars, and administration screens.
 - Repaired issue history and activity cards with aligned circular avatars,
   dark date headings, and compact event timelines.
 - Accessible in-page lightbox for wiki and attachment images, including original
-  Redmine attachment resolution, Escape/backdrop close, and focus restoration.
+  Redmine attachment resolution, zoom and panning, Escape/backdrop close, and
+  focus restoration.
 - Searchable customer chips for the instance-specific custom field 4, with
   keyboard navigation and no server-side dependency.
 - Responsive Redmine flyout behavior below 899 px.
@@ -147,6 +148,16 @@ third-party viewer is loaded. Eligible images show the hand pointer, and the
 preview uses the browser's native modal layer with a fixed-position fallback so
 it cannot be rendered after the page footer.
 
+Images initially fit the preview without enlarging small originals. Use **+**
+and **−** to zoom from 100% to 400% of that fitted size in 25-point increments,
+or **Fit** (**Ajustar** in Portuguese) to reset. The displayed percentage is
+relative to the initial fit, rather than the image's original pixel dimensions.
+The mouse wheel zooms while the pointer is inside the image viewport; modified
+wheel gestures retain browser behavior. Drag an enlarged image with the mouse,
+use touch scrolling, or focus the viewport and use arrow keys to pan. The
+unmodified `+`/`-` keys zoom and `0` resets the fit while the dialog is focused.
+Opening another image or resizing the window resets the fit.
+
 Use the close button, Escape, or the backdrop to dismiss the preview. Keyboard
 focus moves into the dialog and returns to the triggering image or link after
 close. Ctrl/Cmd/Shift/Alt clicks keep the browser's native link behavior.
@@ -225,6 +236,8 @@ The documented baseline includes a live login smoke test using the official
 - [Local issue timer spec](.specify/specs/005-local-issue-timer/spec.md) — local
   persistence, permission boundary, native time-entry handoff, and acceptance
   criteria.
+- [Image lightbox zoom spec](.specify/specs/006-image-lightbox-zoom/spec.md) —
+  fitted zoom, panning, keyboard controls, and preview lifecycle.
 
 ## License and credits
 

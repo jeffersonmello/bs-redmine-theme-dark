@@ -47,7 +47,7 @@ specificity without duplicating the Redmine core stylesheet.
 | `images/` | Time-tracking icons and a WYSIWYG modal texture owned by the theme. |
 | `webfonts/` | Font Awesome 5.15.2 solid font in browser-compatible formats. |
 | `javascripts/theme.js` | Isolated progressive enhancements for the accessible sidebar toggle, instance-specific customer autocomplete, content-image lightbox, and per-issue local timer. |
-| `tests/` | Dependency-free behavior tests for sidebar, customer autocomplete, lightbox eligibility/accessibility, and timer persistence/native-form handoff. |
+| `tests/` | Dependency-free behavior tests for sidebar, customer autocomplete, lightbox eligibility/accessibility/zoom, and timer persistence/native-form handoff. |
 | `screenshot.png` | Historical design reference. |
 | `scripts/validate_theme.rb` | Offline structure, path, glyph, and version-aware validation. |
 
@@ -140,6 +140,24 @@ the rendered image source is retained. Avatars, emoji, user links,
 editor-toolbar images, and non-image attachments are excluded. On close, body
 scroll is restored and focus returns to the original trigger. Without JavaScript,
 images and attachment links keep Redmine's native behavior.
+
+The lightbox owns its zoom state within the same module. Once the image loads,
+its natural dimensions and the available viewport define a fitted size that
+never enlarges a small original. Zoom ranges from 1 to 4 times that fit in
+0.25 increments; the percentage output therefore describes the fitted size,
+not original image pixels. Zoom buttons and Fit reset remain keyboard
+reachable, as does the scrollable image viewport. The viewport supports
+unmodified wheel zoom, mouse-drag panning, native touch scrolling, and keyboard
+arrows; dialog keyboard shortcuts provide `+`/`-` zoom and `0` reset. Modified
+wheel and shortcut gestures preserve browser behavior.
+
+Image dimensions and scrolling keep enlarged content reachable without scaling
+the dialog controls. Fit, a new image, source fallback, loading failure, close,
+and window resize clear the previous zoom/pan state. Pointer-drag state is
+released during lifecycle resets, and controls are disabled while an image is
+not ready. Presentation remains scoped to the lightbox in `modern.css`; this
+feature does not alter the resolver, eligible-image boundaries, native modal
+fallback, or the other theme modules.
 
 ## Local issue timer behavior
 
